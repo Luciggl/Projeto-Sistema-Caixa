@@ -1,74 +1,101 @@
 package Model.controller;
 
-import Model.exceptions.ProdutoNãoExisteException;
-import Model.services.Estoque;
 import Model.entities.Products;
 import Model.enums.Categoria;
+import Model.exceptions.ProdutoNaoExisteException;
+import Model.services.Estoque;
 
-import java.util.Locale;
-import java.util.Scanner;
-
+import javax.swing.*;
 
 public class Program {
-    public static void main(String[] args) throws ProdutoNãoExisteException {
 
-        Locale.setDefault(Locale.US);
-        Scanner sc = new Scanner(System.in);
-
+    public static void main(String[] args) {
         Estoque estoque = new Estoque();
-        Products products = new Products();
 
-        boolean continuar = true;
-        while (continuar != false){
+        try {
+            int option;
+            do {
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Gerenciar Mesas\n7 - Sair");
 
+                if (input == null || input.isEmpty()) {
+                    option = 7;
+                } else {
+                    option = Integer.parseInt(input);
+                }
 
-            System.out.println("Bem vindo!! para sair Digite 4");
-            int OpcaoConti = sc.nextInt();
-            sc.nextLine();
+                switch (option) {
+                    case 1:
+                        // Adicionar produto ao estoque
+                        String name = JOptionPane.showInputDialog("Nome do produto:");
+                        double id = Double.parseDouble(JOptionPane.showInputDialog("ID do produto:"));
+                        Categoria categoria = (Categoria) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Categoria.values(), Categoria.Drinks);
+                        double value = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:"));
 
-            if (OpcaoConti == 1){
-                System.out.println("Product Name:");
-                String name = sc.nextLine();
-                System.out.println("Product ID: ");
-                Double id = sc.nextDouble();
-                System.out.println("Digite a categoria (Drinks, Juice, Softs, Lanches, Petiscos, Beer):");
-                sc.nextLine();
-                String categoriaString = sc.nextLine();
-                Categoria categoria = Categoria.valueOf(categoriaString);
-                System.out.println("Value of Product: ");
-                Double price = sc.nextDouble();
-                System.out.println("Quantidade em estoque:");
-                int qntEstoque = sc.nextInt();
+                        Products newProduct = new Products(name, id, categoria, value);
+                        estoque.addEstoque(newProduct, 1);
+                        break;
 
+                    case 2:
+                        // Remover produto do estoque
+                        int idToRemove = Integer.parseInt(JOptionPane.showInputDialog("ID do produto a ser removido:"));
+                        Products productToRemove = estoque.getProductById(idToRemove);
 
-                products = new Products(name, id,categoria,price);
+                        if (productToRemove != null) {
+                            estoque.removeEstoque(productToRemove, idToRemove);
+                            JOptionPane.showMessageDialog(null, "Produto removido com sucesso!");
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Produto não encontrado com o ID fornecido.");
+                        }
+                        break;
 
-                estoque.addEstoque(products,qntEstoque);
+                    case 3:
 
-                System.out.println("Produto add ao estoque com sucesso: " + estoque );
-            }
-            else if (OpcaoConti == 2) {
-                System.out.println("Add no estoque qnts itens:");
-                int quantAdd = sc.nextInt();
-                estoque.AddQuant(quantAdd);
-                System.out.println("Quantidade atualizada");
-                System.out.println(estoque);
-            }
-            else if (OpcaoConti == 3) {
-                System.out.println("Remove no estoque qnts itens:");
-                int quantRemove = sc.nextInt();
-                estoque.removeQuant(quantRemove);
-                System.out.println("Quantidade atualizada");
-                System.out.println(estoque);
-            }
-            else if (OpcaoConti == 4){
-                continuar = false;
-            }
-            else{
-                System.out.println("Opção invalida");
-            }
+                        JOptionPane.showMessageDialog(null, "Estoque Atual:\n" + estoque);
+                        break;
+
+                    case 4:
+
+                        int idToAddQuant = Integer.parseInt(JOptionPane.showInputDialog("ID do produto para adicionar quantidade:"));
+                        int addQuantity = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser adicionada:"));
+
+                        try {
+                            Products productToAddQuant = estoque.getProductById(idToAddQuant);
+                            estoque.AddQuant(productToAddQuant, addQuantity);
+                            JOptionPane.showMessageDialog(null, "Quantidade adicionada ao estoque.");
+                        } catch (ProdutoNaoExisteException e) {
+                            JOptionPane.showMessageDialog(null, "Erro ao adicionar quantidade: " + e.getMessage());
+                        }
+                        break;
+
+                    case 5:
+                        // Remover quantidade do estoque
+                        int idToRemoveQuant = Integer.parseInt(JOptionPane.showInputDialog("ID do produto para remover quantidade:"));
+                        int removeQuantity = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser removida:"));
+
+                        try {
+                            Products productToRemoveQuant = estoque.getProductById(idToRemoveQuant);
+                            estoque.removeQuant(productToRemoveQuant, removeQuantity);
+                            JOptionPane.showMessageDialog(null, "Quantidade removida do estoque.");
+                        } catch (ProdutoNaoExisteException e) {
+                            JOptionPane.showMessageDialog(null, "Erro ao remover quantidade: " + e.getMessage());
+                        }
+                        break;
+
+                    case 6:
+                        System.out.println("Em manutenção...");
+                        break;
+
+                    case 7:
+                        JOptionPane.showMessageDialog(null, "Saindo do programa.");
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                }
+            } while (option != 7);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
         }
-        System.out.println(estoque);
-        sc.close();
     }
 }

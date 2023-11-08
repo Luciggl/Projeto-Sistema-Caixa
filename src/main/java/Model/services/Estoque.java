@@ -1,7 +1,9 @@
 package Model.services;
 
 import Model.entities.Products;
-import Model.exceptions.ProdutoNãoExisteException;
+import Model.enums.Categoria;
+import Model.exceptions.ProdutoJaExisteException;
+import Model.exceptions.ProdutoNaoExisteException;
 
 import java.util.ArrayList;
 
@@ -25,41 +27,76 @@ public class Estoque implements Model.repositories.Estoque{
         }
         return null;
     }
-
-    public Estoque(Products products, int quantInstoque) {
-        this.productsEstoque = new ArrayList<>();
-        quantInstoque = 0;
-    }
     public Estoque(){}
-
-    public void addEstoque(Products product, int qntEstoque){
-        if(productsEstoque == null) {
-            productsEstoque = new ArrayList<>();
-            this.QuantInstoque = qntEstoque;
-        }
-        if(produtoExiste(product) == false ){
-            productsEstoque.add(product);
-        }
-    }
-
-    @Override
-    public void removeEstoque(Products product, int id) throws ProdutoNãoExisteException {
-        if(produtoExiste(product) == true ){
-            productsEstoque.remove(product);
-        }
-    }
 
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
     }
-    @Override
-    public void AddQuant(int quant) throws ProdutoNãoExisteException {
-        setQuantInstoque(QuantInstoque += quant);;
+
+
+    public void addEstoque(Products product, int qntEstoque) throws ProdutoJaExisteException {
+        try {
+            if (productsEstoque == null) {
+                productsEstoque = new ArrayList<>();
+                this.QuantInstoque = qntEstoque;
+            }
+
+            if (produtoExiste(product)) {
+                throw new ProdutoJaExisteException("Error: Produto já existe no estoque");
+            } else {
+                productsEstoque.add(product);
+            }
+        } catch (ProdutoJaExisteException e) {
+            throw e;
+        }
     }
 
     @Override
-    public void removeQuant(int quant) throws ProdutoNãoExisteException {
-        setQuantInstoque(QuantInstoque -= quant);;
+    public void removeEstoque(Products product, int id) throws ProdutoNaoExisteException {
+        boolean productFound = false;
+
+        for (Products p : productsEstoque) {
+            if (p.getId() == id) {
+                productFound = true;
+                productsEstoque.remove(p);
+                break;
+            }
+        }
+        if (!productFound) {
+            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+        }
+    }
+
+
+    @Override
+    public void AddQuant(Products product, int quant) throws ProdutoNaoExisteException {
+        if (produtoExiste(product)) {
+            int newQuant = getQuantInstoque() + quant;
+            setQuantInstoque(newQuant);
+        } else {
+            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+        }
+    }
+
+
+
+    @Override
+    public void removeQuant(Products product, int quant) throws ProdutoNaoExisteException {
+        if (produtoExiste(product)) {
+            int newQuant = getQuantInstoque() - quant;
+            setQuantInstoque(newQuant);
+        } else {
+            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+        }
+    }
+    public ArrayList<Products> getProductsByCategory(Categoria category) {
+        ArrayList<Products> productsByCategory = new ArrayList<>();
+        for (Products product : productsEstoque) {
+            if (product.getCategoria() == category) {
+                productsByCategory.add(product);
+            }
+        }
+        return productsByCategory;
     }
 
     @Override

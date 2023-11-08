@@ -1,13 +1,22 @@
 package Model.repositories;
 
 import Model.entities.Products;
+import Model.enums.Categoria;
 import Model.exceptions.ProdutoJaExisteException;
-import Model.exceptions.ProdutoNãoExisteException;
+import Model.exceptions.ProdutoNaoExisteException;
+
+import java.util.ArrayList;
 
 public interface Estoque {
+   int getQuantInstoque();
+   void setQuantInstoque(int quantInstoque);
+   Products getProductById(int id);
+   boolean produtoExiste(Products product);
    void addEstoque(Products product, int qntEstoque) throws ProdutoJaExisteException;
-   void removeEstoque(Products products, int id) throws ProdutoNãoExisteException;
-   void AddQuant(int quant) throws ProdutoNãoExisteException;
-   void removeQuant(int quant) throws ProdutoNãoExisteException;
+   void removeEstoque(Products product, int id) throws ProdutoNaoExisteException;
+   void AddQuant(Products product, int quant) throws ProdutoNaoExisteException;
+   void removeQuant(Products product, int quant) throws ProdutoNaoExisteException;
+   ArrayList<Products> getProductsByCategory(Categoria category);
+   String toString();
 }
 ;

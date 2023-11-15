@@ -2,21 +2,24 @@ package Model.entities;
 
 import Model.enums.Categoria;
 
+import java.io.Serializable;
 import java.util.Objects;
 
-public class Products {
+public class Products implements Serializable {
     private String name;
     private double id;
     private Categoria categoria;
     private Double value;
+    private int quanti;
 
     public  Products(){}
 
-    public Products(String name, double id, Categoria categoria, Double value) {
+    public Products(String name, double id, Categoria categoria, Double value, int quanti) {
         this.name = name;
         this.id = id;
         this.categoria = categoria;
         this.value = value;
+        this.quanti = quanti;
     }
 
     public String getName() {
@@ -51,6 +54,13 @@ public class Products {
         this.value = value;
     }
 
+    public int getQuanti() {
+        return quanti;
+    }
+
+    public void setQuanti(int quanti) {
+        this.quanti = quanti;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -67,10 +77,12 @@ public class Products {
 
     @Override
     public String toString() {
-        return "Product: \n" +
-                "name: " + name + "\n" +
-                "id: " + id + "\n" +
-                "categoria: " + categoria + "\n" +
-                "value: R$:" + value;
+        return "Product:" +
+                "\nname: " + name + "\n" +
+                "ID: " + id + "\n" +
+                "Categoria: " + categoria + "\n" +
+                "Valor R$:" + value + "\n" +
+                "Quantidade : " + quanti + "\n" +
+                "-----------------------------\n";
     }
 }

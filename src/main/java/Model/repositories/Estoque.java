@@ -8,11 +8,9 @@ import Model.exceptions.ProdutoNaoExisteException;
 import java.util.ArrayList;
 
 public interface Estoque {
-   int getQuantInstoque();
-   void setQuantInstoque(int quantInstoque);
    Products getProductById(int id);
    boolean produtoExiste(Products product);
-   void addEstoque(Products product, int qntEstoque) throws ProdutoJaExisteException;
+   void addEstoque(Products product) throws ProdutoJaExisteException;
    void removeEstoque(Products product, int id) throws ProdutoNaoExisteException;
    void AddQuant(Products product, int quant) throws ProdutoNaoExisteException;
    void removeQuant(Products product, int quant) throws ProdutoNaoExisteException;

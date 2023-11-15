@@ -6,6 +6,7 @@ import Model.enums.StatusMesa;
 import java.util.ArrayList;
 
 public interface Mesas {
+    Double taxaService = 10.0;
     int getNumMesa();
     StatusMesa getStatusMesa();
     void setStatusMesa(StatusMesa statusMesa);

@@ -1,7 +1,9 @@
 package Model.services;
 
 import Model.entities.Products;
+import Model.enums.Categoria;
 import Model.enums.StatusMesa;
+import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 
 import java.util.ArrayList;
@@ -58,8 +60,13 @@ public class Mesas extends Estoque implements Model.repositories.Mesas {
     public double calcularTotalProdutosConsumidos() {
         double total = 0;
         for (Products produto : ProdutosMesa) {
-            total += produto.getValue();
+            if (produto.getCategoria() == Categoria.Juice) {
+                total = (total += produto.getValue() * Model.repositories.Mesas.taxaService / 100);
+            } else {
+                total += produto.getValue();
+            }
         }
         return total;
     }
+
 }

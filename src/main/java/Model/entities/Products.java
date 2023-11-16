@@ -30,7 +30,7 @@ public class Products implements Serializable {
         this.name = name;
     }
 
-    public double getId() {
+    public Double getId() {
         return id;
     }
 

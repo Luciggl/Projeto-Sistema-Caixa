@@ -6,12 +6,12 @@ import Model.enums.StatusMesa;
 import java.util.ArrayList;
 
 public interface Mesas {
-    Double taxaService = 10.0;
+    Double taxaService = 0.1;
     int getNumMesa();
     StatusMesa getStatusMesa();
     void setStatusMesa(StatusMesa statusMesa);
     ArrayList<Products> getProdutosMesa();
-    void addProdutoMesa(Products produto, int quant);
-    void removerProdutoMesa(Products produto, int quant);
-    double calcularTotalProdutosConsumidos();
+    void addProdutoMesa(Products produto, int quant, double NumMes);
+    void removerProdutoMesa(Products produto, int quant, double NumMes);
+    double calcularTotalProdutosConsumidos(int NumMesa);
 }

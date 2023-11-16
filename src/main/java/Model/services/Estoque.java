@@ -8,6 +8,7 @@ import Model.exceptions.ProdutoNaoExisteException;
 import java.io.*;
 import java.util.ArrayList;
 
+
 public class Estoque implements Model.repositories.Estoque{
     private ArrayList<Products> productsEstoque;
 
@@ -20,6 +21,11 @@ public class Estoque implements Model.repositories.Estoque{
         return null;
     }
     public Estoque(){}
+
+    @Override
+    public Products getProductById(double id) {
+        return null;
+    }
 
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
@@ -73,8 +79,12 @@ public class Estoque implements Model.repositories.Estoque{
     @Override
     public void removeQuant(Products product, int quant) throws ProdutoNaoExisteException {
         if (produtoExiste(product)) {
-            int newQuant = product.getQuanti() - quant;
-            product.setQuanti(newQuant);
+            if (product.getQuanti() >= quant){
+                int newQuant = product.getQuanti() - quant;
+                product.setQuanti(newQuant);
+            } else {
+                throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+            }
         } else {
             throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
         }
@@ -167,5 +177,6 @@ public class Estoque implements Model.repositories.Estoque{
 
         return valorTotal;
     }
+
 
 }

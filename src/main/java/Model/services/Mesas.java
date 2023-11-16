@@ -39,7 +39,7 @@ public class Mesas extends Estoque implements Model.repositories.Mesas {
         return ProdutosMesa;
     }
 
-    public void addProdutoMesa(Products produto, int quant) {
+    public void addProdutoMesa(Products produto, int quant, double NumMes) {
         ProdutosMesa.add(produto);
         try {
             estoque.removeQuant(produto, quant);
@@ -48,7 +48,7 @@ public class Mesas extends Estoque implements Model.repositories.Mesas {
         }
     }
 
-    public void removerProdutoMesa(Products produto, int quant) {
+    public void removerProdutoMesa(Products produto, int quant, double NumMes) {
         ProdutosMesa.remove(produto);
         try {
             estoque.AddQuant(produto, quant);
@@ -57,16 +57,17 @@ public class Mesas extends Estoque implements Model.repositories.Mesas {
         }
     }
 
-    public double calcularTotalProdutosConsumidos() {
-        double total = 0;
-        for (Products produto : ProdutosMesa) {
-            if (produto.getCategoria() == Categoria.Juice) {
-                total = (total += produto.getValue() * Model.repositories.Mesas.taxaService / 100);
+    public double calcularTotalProdutosConsumidos(int NumMesa) {
+        double valorTotal = 0;
+
+        for (Products product : ProdutosMesa) {
+            int quantidadeNaMesa = product.getQuanti();
+            if (product.getCategoria() == Categoria.Drinks) {
+                valorTotal += (product.getValue() * quantidadeNaMesa) + ((product.getValue() * quantidadeNaMesa) * taxaService);
             } else {
-                total += produto.getValue();
+                valorTotal += product.getValue() * quantidadeNaMesa;
             }
         }
-        return total;
+        return valorTotal;
     }
-
 }

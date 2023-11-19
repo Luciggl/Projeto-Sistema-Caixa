@@ -75,7 +75,7 @@ public class Estoque implements Model.repositories.Estoque{
         }
     }
 
-    
+
     @Override
     public void removeQuant(Products product, int quant) throws ProdutoNaoExisteException {
         if (produtoExiste(product)) {

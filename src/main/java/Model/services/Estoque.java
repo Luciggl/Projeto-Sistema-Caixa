@@ -11,21 +11,7 @@ import java.util.ArrayList;
 public class Estoque implements Model.repositories.Estoque {
     private ArrayList<Products> productsEstoque = new ArrayList<>();
 
-    public Products getProductById(int id) {
-        for (Products product : productsEstoque) {
-            if (product.getId() == id) {
-                return product;
-            }
-        }
-        return null;
-    }
-
     public Estoque() {}
-
-    @Override
-    public Products getProductById(double id) {
-        return null;
-    }
 
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
@@ -77,6 +63,15 @@ public class Estoque implements Model.repositories.Estoque {
         } else {
             throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
         }
+    }
+
+    public Products getProductById(double id) {
+        for (Products product : productsEstoque) {
+            if (product.getId() == id) {
+                return product;
+            }
+        }
+        return null;
     }
 
     public ArrayList<Products> getProductsByCategory(Categoria category) {

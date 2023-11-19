@@ -2,26 +2,25 @@ package Model.controller;
 
 import Model.entities.Products;
 import Model.enums.Categoria;
-import Model.enums.StatusMesa;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 import Model.services.Estoque;
-import Model.services.Mesas;
 
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class Program {
 
     public static void main(String[] args) {
         Estoque estoque = new Estoque();
-        Mesas mesas = new Mesas(1, StatusMesa.Livre, estoque);
+
 
         estoque.carregarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
 
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Gerenciar Mesas\n7 - Salvar \n8 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto Por Id\n7 - Salvar \n8 - Sair");
 
                 if (input == null || input.isEmpty()) {
                     option = 7;
@@ -51,7 +50,7 @@ public class Program {
                         break;
 
                     case 6:
-                        gerenciarMesas(mesas, estoque);
+                        pesquisarPorIdOuCategoria(estoque);
                         break;
 
                     case 7:
@@ -138,90 +137,6 @@ public class Program {
         }
     }
 
-    private static void gerenciarMesas(Mesas mesas, Estoque estoque) {
-        try {
-            int option;
-            do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto à Mesa\n2 - Remover Produto da Mesa\n3 - Calcular Total da Mesa\n4 - Voltar");
-
-                if (input == null || input.isEmpty()) {
-                    option = 4;
-                } else {
-                    option = Integer.parseInt(input);
-                }
-
-                switch (option) {
-                    case 1:
-                        adicionarProdutoAMesa(mesas, estoque);
-                        break;
-
-                    case 2:
-                        removerProdutoDaMesa(mesas, estoque);
-                        break;
-
-                    case 3:
-                        calcularTotalMesa(mesas);
-                        break;
-
-                    case 4:
-                        break;
-
-                    default:
-                        JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
-                }
-            } while (option != 4);
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
-        }
-    }
-
-    private static void adicionarProdutoAMesa(Mesas mesas, Estoque estoque) {
-        try {
-            int mesaId = Integer.parseInt(JOptionPane.showInputDialog("Número da mesa para adicionar produto:"));
-            int quant = Integer.parseInt(JOptionPane.showInputDialog("Quantidade de Produtos a Adicionar:"));
-            Products productToAdd = escolherProduto(estoque);
-
-            if (productToAdd != null) {
-                mesas.addProdutoMesa(productToAdd, quant, mesaId);
-                estoque.removeQuant(productToAdd, quant);
-                JOptionPane.showMessageDialog(null, "Produto adicionado à mesa com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao adicionar produto à mesa: Insira um número de mesa válido.");
-        } catch (ProdutoNaoExisteException e) {
-            JOptionPane.showMessageDialog(null, "Quantidade Insuficiente:");
-        }
-    }
-
-    private static void removerProdutoDaMesa(Mesas mesas, Estoque estoque) {
-        try {
-            int mesaId = Integer.parseInt(JOptionPane.showInputDialog("Número da mesa para remover produto:"));
-            int quant = Integer.parseInt(JOptionPane.showInputDialog("Quantidade de Produtos a Remover:"));
-            Products productToRemove = escolherProduto(estoque);
-
-            if (productToRemove != null) {
-                mesas.removerProdutoMesa(productToRemove,quant, mesaId);
-                JOptionPane.showMessageDialog(null, "Produto removido da mesa com sucesso!");
-            } else {
-                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
-            }
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao remover produto da mesa: Insira um número de mesa válido.");
-        }
-    }
-
-    private static void calcularTotalMesa(Mesas mesas) {
-        try {
-            int mesaId = Integer.parseInt(JOptionPane.showInputDialog("Número da mesa para calcular total:"));
-            double total = mesas.calcularTotalProdutosConsumidos(mesaId);
-            JOptionPane.showMessageDialog(null, "Total da mesa " + mesaId + " R$: " + total);
-        } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao calcular total da mesa: Insira um número de mesa válido.");
-        }
-    }
-
     private static Products escolherProduto(Estoque estoque) {
         try {
             int productId = Integer.parseInt(JOptionPane.showInputDialog("ID do produto a ser escolhido:"));
@@ -229,6 +144,59 @@ public class Program {
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao escolher produto: Insira um ID válido.");
             return null;
+        }
+    }
+    private static void pesquisarPorIdOuCategoria(Estoque estoque) {
+        try {
+            String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Pesquisar por ID\n2 - Pesquisar por Categoria");
+            int option = Integer.parseInt(input);
+
+            switch (option) {
+                case 1:
+                    pesquisarPorId(estoque);
+                    break;
+
+                case 2:
+                    pesquisarPorCategoria(estoque);
+                    break;
+
+                default:
+                    JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao escolher opção: Insira um número válido.");
+        }
+    }
+
+    private static void pesquisarPorId(Estoque estoque) {
+        try {
+            Products produtoPesquisado = escolherProduto(estoque);
+            if (produtoPesquisado != null) {
+                JOptionPane.showMessageDialog(null, "Produto encontrado:\n" + produtoPesquisado);
+            } else {
+                JOptionPane.showMessageDialog(null, "Produto não encontrado.");
+            }
+        } catch (NumberFormatException e) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar por ID: Insira um ID válido.");
+        }
+    }
+
+    private static void pesquisarPorCategoria(Estoque estoque) {
+        try {
+            Categoria categoria = (Categoria) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Categoria.values(), Categoria.Drinks);
+            ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(categoria);
+
+            if (!produtosPorCategoria.isEmpty()) {
+                StringBuilder mensagem = new StringBuilder("Produtos na categoria " + categoria + ":\n");
+                for (Products produto : produtosPorCategoria) {
+                    mensagem.append(produto).append("\n");
+                }
+                JOptionPane.showMessageDialog(null, mensagem.toString());
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhum produto encontrado na categoria " + categoria + ".");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar por categoria: " + e.getMessage());
         }
     }
 }

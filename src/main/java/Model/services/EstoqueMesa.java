@@ -25,7 +25,7 @@ public class EstoqueMesa extends Estoque {
         }
     }
 
-    public double calcularTotalProdutosConsumidos() {
+    public double calcularTotalProdutosConsumidos(int NumMesa) {
         double valorTotal = 0;
 
         for (Products product : produtosMesa) {

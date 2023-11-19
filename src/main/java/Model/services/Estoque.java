@@ -8,9 +8,8 @@ import Model.exceptions.ProdutoNaoExisteException;
 import java.io.*;
 import java.util.ArrayList;
 
-
-public class Estoque implements Model.repositories.Estoque{
-    private ArrayList<Products> productsEstoque;
+public class Estoque implements Model.repositories.Estoque {
+    private ArrayList<Products> productsEstoque = new ArrayList<>();
 
     public Products getProductById(int id) {
         for (Products product : productsEstoque) {
@@ -20,7 +19,8 @@ public class Estoque implements Model.repositories.Estoque{
         }
         return null;
     }
-    public Estoque(){}
+
+    public Estoque() {}
 
     @Override
     public Products getProductById(double id) {
@@ -31,20 +31,11 @@ public class Estoque implements Model.repositories.Estoque{
         return productsEstoque.contains(product);
     }
 
-
     public void addEstoque(Products product) throws ProdutoJaExisteException {
-        try {
-            if (productsEstoque == null) {
-                productsEstoque = new ArrayList<>();
-            }
-
-            if (produtoExiste(product)) {
-                throw new ProdutoJaExisteException("Error: Produto já existe no estoque");
-            } else {
-                productsEstoque.add(product);
-            }
-        } catch (ProdutoJaExisteException e) {
-            throw e;
+        if (produtoExiste(product)) {
+            throw new ProdutoJaExisteException("Error: Produto já existe no estoque");
+        } else {
+            productsEstoque.add(product);
         }
     }
 
@@ -64,7 +55,6 @@ public class Estoque implements Model.repositories.Estoque{
         }
     }
 
-
     @Override
     public void AddQuant(Products product, int quant) throws ProdutoNaoExisteException {
         if (produtoExiste(product)) {
@@ -75,11 +65,10 @@ public class Estoque implements Model.repositories.Estoque{
         }
     }
 
-
     @Override
     public void removeQuant(Products product, int quant) throws ProdutoNaoExisteException {
         if (produtoExiste(product)) {
-            if (product.getQuanti() >= quant){
+            if (product.getQuanti() >= quant) {
                 int newQuant = product.getQuanti() - quant;
                 product.setQuanti(newQuant);
             } else {
@@ -89,6 +78,7 @@ public class Estoque implements Model.repositories.Estoque{
             throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
         }
     }
+
     public ArrayList<Products> getProductsByCategory(Categoria category) {
         ArrayList<Products> productsByCategory = new ArrayList<>();
         for (Products product : productsEstoque) {
@@ -111,21 +101,20 @@ public class Estoque implements Model.repositories.Estoque{
             for (Products product : productsEstoque) {
                 boolean productFound = false;
 
-                BufferedReader reader = new BufferedReader(new FileReader(filePath));
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    String[] parts = line.split(",");
-                    if (parts.length > 4) {
-                        double id = Double.parseDouble(parts[1]);
-                        if (id == product.getId()) {
-                            productFound = true;
-                            writer.write(product.getName() + "," + product.getId() + "," + product.getCategoria() + "," + product.getValue() + "," + product.getQuanti());
-                            writer.newLine();
+                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+                    String line;
+                    while ((line = reader.readLine()) != null) {
+                        String[] parts = line.split(",");
+                        if (parts.length > 4) {
+                            double id = Double.parseDouble(parts[1]);
+                            if (id == product.getId()) {
+                                productFound = true;
+                                writer.write(product.getName() + "," + product.getId() + "," + product.getCategoria() + "," + product.getValue() + "," + product.getQuanti());
+                                writer.newLine();
+                            }
                         }
                     }
                 }
-                reader.close();
 
                 if (!productFound) {
                     tempProducts.add(product);
@@ -177,6 +166,4 @@ public class Estoque implements Model.repositories.Estoque{
 
         return valorTotal;
     }
-
-
 }

@@ -11,7 +11,8 @@ public interface Mesas {
     StatusMesa getStatusMesa();
     void setStatusMesa(StatusMesa statusMesa);
     ArrayList<Products> getProdutosMesa();
-    void addProdutoMesa(Products produto, int quant, double NumMes);
-    void removerProdutoMesa(Products produto, int quant, double NumMes);
+    void addProdutoMesa(Products produto, int quant, int NumMes);
+    void removerProdutoMesa(Products produto, int quant, int NumMes);
     double calcularTotalProdutosConsumidos(int NumMesa);
+    public Products getProductById(int id);
 }

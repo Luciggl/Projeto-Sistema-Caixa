@@ -1,3 +1,4 @@
-suco de Limão,123.0,Juice,5.0,10
+suco de Limão,123.0,Juice,5.0,9
 Suco laranja,1234.0,Juice,8.0,10
 Lagoa Azul,12345.0,Drinks,12.0,10
+Hamburger,12.0,Lanches,5.0,8

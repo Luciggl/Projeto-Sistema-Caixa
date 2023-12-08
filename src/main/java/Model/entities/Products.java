@@ -1,49 +1,45 @@
 package Model.entities;
 
-import Model.enums.Categoria;
+import Model.enums.Category;
 
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Products implements Serializable {
-    private String name;
     private double id;
-    private Categoria categoria;
+    private String name;
+    private String manufacturer;
+    private Model.enums.Category Category;
     private Double value;
     private int quanti;
 
-    public  Products(){}
+    public Products() {
+    }
 
-    public Products(String name, double id, Categoria categoria, Double value, int quanti) {
-        this.name = name;
+    public Products(double id, String name, String manufacturer, Model.enums.Category category, Double value, int quanti) {
         this.id = id;
-        this.categoria = categoria;
+        this.name = name;
+        this.manufacturer = manufacturer;
+        Category = category;
         this.value = value;
         this.quanti = quanti;
     }
+
+    public double getId() {
+        return id;
+    }
+
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public String getManufacturer() {
+        return manufacturer;
     }
 
-    public Double getId() {
-        return id;
-    }
-
-    public void setId(double id) {
-        this.id = id;
-    }
-
-    public Categoria getCategoria() {
-        return categoria;
-    }
-
-    public void setCategoria(Categoria categoria) {
-        this.categoria = categoria;
+    public Model.enums.Category getCategory() {
+        return Category;
     }
 
     public Double getValue() {
@@ -66,23 +62,22 @@ public class Products implements Serializable {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (!(o instanceof Products products)) return false;
-        return Double.compare(getId(), products.getId()) == 0 && Objects.equals(getName(), products.getName()) && getCategoria() == products.getCategoria();
+        return Double.compare(getId(), products.getId()) == 0 && Objects.equals(getName(), products.getName()) && Objects.equals(getManufacturer(), products.getManufacturer());
     }
-
 
     @Override
     public int hashCode() {
-        return Objects.hash(getName(), getId(), getCategoria());
+        return Objects.hash(getId(), getName(), getManufacturer());
     }
 
     @Override
     public String toString() {
-        return "Product:" +
-                "\nname: " + name + "\n" +
-                "ID: " + id + "\n" +
-                "Categoria: " + categoria + "\n" +
-                "Valor R$:" + value + "\n" +
-                "Quantidade : " + quanti + "\n" +
-                "-----------------------------\n";
+        return "Product: \n" +
+                "id: " + id + '\n' +
+                "Name: " + name + '\n' +
+                "Manufacturer: " + manufacturer + '\n' +
+                "Category: " + Category + '\n' +
+                "Value: " + value + '\n' +
+                "Quantity: " + quanti;
     }
 }

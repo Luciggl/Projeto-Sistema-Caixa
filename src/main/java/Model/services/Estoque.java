@@ -1,7 +1,7 @@
 package Model.services;
 
 import Model.entities.Products;
-import Model.enums.Categoria;
+import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 
@@ -74,10 +74,10 @@ public class Estoque implements Model.repositories.Estoque {
         return null;
     }
 
-    public ArrayList<Products> getProductsByCategory(Categoria category) {
+    public ArrayList<Products> getProductsByCategory(Category category) {
         ArrayList<Products> productsByCategory = new ArrayList<>();
         for (Products product : productsEstoque) {
-            if (product.getCategoria() == category) {
+            if (product.getCategory() == category) {
                 productsByCategory.add(product);
             }
         }
@@ -91,33 +91,14 @@ public class Estoque implements Model.repositories.Estoque {
 
     public void salvarEstoque(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            ArrayList<Products> tempProducts = new ArrayList<>();
-
             for (Products product : productsEstoque) {
-                boolean productFound = false;
-
-                try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-                    String line;
-                    while ((line = reader.readLine()) != null) {
-                        String[] parts = line.split(",");
-                        if (parts.length > 4) {
-                            double id = Double.parseDouble(parts[1]);
-                            if (id == product.getId()) {
-                                productFound = true;
-                                writer.write(product.getName() + "," + product.getId() + "," + product.getCategoria() + "," + product.getValue() + "," + product.getQuanti());
-                                writer.newLine();
-                            }
-                        }
-                    }
-                }
-
-                if (!productFound) {
-                    tempProducts.add(product);
-                }
-            }
-
-            for (Products tempProduct : tempProducts) {
-                writer.write(tempProduct.getName() + "," + tempProduct.getId() + "," + tempProduct.getCategoria() + "," + tempProduct.getValue() + "," + tempProduct.getQuanti());
+                writer.write(
+                        product.getId() + "," +
+                                product.getName() + "," +
+                                product.getManufacturer() + "," +
+                                product.getCategory() + "," +
+                                product.getValue() + "," +
+                                product.getQuanti());
                 writer.newLine();
             }
 
@@ -135,14 +116,15 @@ public class Estoque implements Model.repositories.Estoque {
             while ((line = reader.readLine()) != null) {
                 String[] parts = line.split(",");
 
-                if (parts.length > 4) {
-                    String nome = parts[0];
-                    double id = Double.parseDouble(parts[1]);
-                    Categoria categoria = Categoria.valueOf(parts[2]);
-                    double valor = Double.parseDouble(parts[3]);
-                    int quantidade = Integer.parseInt(parts[4]);
+                if (parts.length >= 6) {
+                    double id = Double.parseDouble(parts[0]);
+                    String name = parts[1];
+                    String manufacturer = parts[2];
+                    Category category = Category.valueOf(parts[3]);
+                    double value = Double.parseDouble(parts[4]);
+                    int quant = Integer.parseInt(parts[5]);
 
-                    Products product = new Products(nome, id, categoria, valor, quantidade);
+                    Products product = new Products(id, name,manufacturer,category,value, quant );
                     productsEstoque.add(product);
                 }
             }

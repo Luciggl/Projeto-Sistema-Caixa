@@ -1,7 +1,7 @@
 package Model.controller;
 
 import Model.entities.Products;
-import Model.enums.Categoria;
+import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 import Model.services.Estoque;
@@ -74,13 +74,14 @@ public class Program {
 
     private static void adicionarProduto(Estoque estoque) {
         try {
-            String name = JOptionPane.showInputDialog("Nome do produto:");
             double id = Double.parseDouble(JOptionPane.showInputDialog("ID do produto:"));
-            Categoria categoria = (Categoria) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Categoria.values(), Categoria.Drinks);
+            String name = JOptionPane.showInputDialog("Nome do produto:");
+            String manufacturer = JOptionPane.showInputDialog("Fabricante");
+            Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.Drinks);
             double value = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:"));
             int quant = Integer.parseInt((JOptionPane.showInputDialog("Digite a Quantidade em Estoque")));
 
-            Products newProduct = new Products(name, id, categoria, value, quant);
+            Products newProduct = new Products(id, name, manufacturer, category, value, quant);
             estoque.addEstoque(newProduct);
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: Insira valores válidos.");
@@ -108,7 +109,7 @@ public class Program {
     }
 
     private static void verificarEstoque(Estoque estoque) {
-        JOptionPane.showMessageDialog(null, "Valor Total do estoque: " + estoque.calcularValorTotalEstoque() + "\n  Estoque Atual:\n" + estoque);
+        JOptionPane.showMessageDialog(null, "Estoque Atual:\n" + estoque);
     }
 
     private static void adicionarQuantidade(Estoque estoque) {
@@ -183,17 +184,17 @@ public class Program {
 
     private static void pesquisarPorCategoria(Estoque estoque) {
         try {
-            Categoria categoria = (Categoria) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Categoria.values(), Categoria.Drinks);
-            ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(categoria);
+            Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.Drinks);
+            ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(category);
 
             if (!produtosPorCategoria.isEmpty()) {
-                StringBuilder mensagem = new StringBuilder("Produtos na categoria " + categoria + ":\n");
+                StringBuilder mensagem = new StringBuilder("Produtos na categoria " + category + ":\n");
                 for (Products produto : produtosPorCategoria) {
                     mensagem.append(produto).append("\n");
                 }
                 JOptionPane.showMessageDialog(null, mensagem.toString());
             } else {
-                JOptionPane.showMessageDialog(null, "Nenhum produto encontrado na categoria " + categoria + ".");
+                JOptionPane.showMessageDialog(null, "Nenhum produto encontrado na categoria " + category + ".");
             }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro ao pesquisar por categoria: " + e.getMessage());

@@ -1,5 +1,5 @@
 package Model.enums;
 
-public enum Categoria {
+public enum Category {
     Drinks, Juice, Softs, Lanches, Petiscos, Beer;
 }

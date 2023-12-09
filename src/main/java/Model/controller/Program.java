@@ -5,6 +5,7 @@ import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 import Model.services.Estoque;
+import Model.services.Caixa;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +16,14 @@ public class Program {
     public static void main(String[] args) {
         Estoque estoque = new Estoque();
 
+        Caixa caixa = new Caixa(estoque);
 
         estoque.carregarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
 
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Comprar\n9 - Sair");
 
                 if (input == null || input.isEmpty()) {
                     option = 7;
@@ -59,6 +61,10 @@ public class Program {
                         break;
 
                     case 8:
+                        realizarCompra(caixa);
+                        break;
+
+                    case 9:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
                         break;
@@ -66,7 +72,7 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 8);
+            } while (option != 9);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
@@ -75,7 +81,7 @@ public class Program {
 
     private static void adicionarProduto(Estoque estoque) {
         try {
-            double id = Double.parseDouble(JOptionPane.showInputDialog("ID do produto:"));
+            int id = Integer.parseInt(JOptionPane.showInputDialog("ID do produto:"));
             if (!estoque.Idexiste(id)){
                 String name = JOptionPane.showInputDialog("Nome do produto:");
                 String manufacturer = JOptionPane.showInputDialog("Fabricante");
@@ -115,6 +121,7 @@ public class Program {
 
     private static void verificarEstoque(Estoque estoque) {
         JOptionPane.showMessageDialog(null, "Estoque Atual:\n" + estoque);
+        System.out.println(estoque);
     }
 
     private static void adicionarQuantidade(Estoque estoque) {
@@ -228,5 +235,61 @@ public class Program {
             JOptionPane.showMessageDialog(null, "Erro ao pesquisar por fabricante: " + e.getMessage());
         }
     }
+
+    private static void realizarCompra(Caixa caixa) {
+        ArrayList<String> listaCompra = new ArrayList<>();
+
+        int option;
+        double valorTotalCompra = 0;
+
+        do {
+            Products produtoComprado = escolherProduto(caixa.getEstoque());
+
+            if (produtoComprado != null) {
+                int quantidadeComprada = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser comprada:"));
+
+                try {
+                    caixa.adicionarProduto(produtoComprado, quantidadeComprada);
+
+                    double valorTotalProduto = produtoComprado.getValue() * quantidadeComprada;
+
+                    listaCompra.add(produtoComprado.getName() + " \n" + quantidadeComprada + " - R$: " + produtoComprado.getValue()  +" - Total R$:" + valorTotalProduto);
+                    valorTotalCompra += valorTotalProduto;
+                } catch (ProdutoNaoExisteException e) {
+                    JOptionPane.showMessageDialog(null, "Erro ao adicionar produto à compra: " + e.getMessage());
+                }
+            } else {
+                break;
+            }
+
+            String[] options = {"Continuar Comprando", "Finalizar"};
+            option = JOptionPane.showOptionDialog(
+                    null,
+                    "Valor total da compra: R$ " + valorTotalCompra,
+                    "Continuar Comprando ou Finalizar",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    options,
+                    options[0]
+            );
+
+            if (option == 1) {
+                break;
+            }
+        } while (true);
+
+        caixa.finalizarCompra();
+
+        listaCompra.add("-------------------------------------------" + "\n Total R$: " + valorTotalCompra);
+
+        JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+    }
+
+
+
+
+
+
 
 }

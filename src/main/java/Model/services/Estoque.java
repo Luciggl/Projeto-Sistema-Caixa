@@ -138,7 +138,7 @@ public class Estoque implements Model.repositories.Estoque {
                 String[] parts = line.split(",");
 
                 if (parts.length >= 6) {
-                    double id = Double.parseDouble(parts[0]);
+                    int id = Integer.parseInt(parts[0]);
                     String name = parts[1];
                     String manufacturer = parts[2];
                     Category category = Category.valueOf(parts[3]);

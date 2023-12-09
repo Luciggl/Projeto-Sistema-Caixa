@@ -6,7 +6,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Products implements Serializable {
-    private double id;
+    private int id;
     private String name;
     private String manufacturer;
     private Model.enums.Category Category;
@@ -16,7 +16,7 @@ public class Products implements Serializable {
     public Products() {
     }
 
-    public Products(double id, String name, String manufacturer, Model.enums.Category category, Double value, int quanti) {
+    public Products(int id, String name, String manufacturer, Model.enums.Category category, Double value, int quanti) {
         this.id = id;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -25,7 +25,7 @@ public class Products implements Serializable {
         this.quanti = quanti;
     }
 
-    public double getId() {
+    public int getId() {
         return id;
     }
 

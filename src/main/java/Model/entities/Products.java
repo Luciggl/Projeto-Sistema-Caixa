@@ -78,6 +78,7 @@ public class Products implements Serializable {
                 "Manufacturer: " + manufacturer + '\n' +
                 "Category: " + Category + '\n' +
                 "Value: " + value + '\n' +
-                "Quantity: " + quanti;
+                "Quantity: " + quanti + "\n" +
+                "---------------------------------\n";
     }
 }

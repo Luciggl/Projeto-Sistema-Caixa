@@ -1,1 +1,1 @@
-123.0,Papel,Coala,Drinks,19.0,7
+123.0,sabão,Omo,ALIMENTO,10.0,10

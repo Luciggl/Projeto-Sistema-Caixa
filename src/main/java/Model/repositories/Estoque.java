@@ -16,5 +16,6 @@ public interface Estoque {
    void removeQuant(Products product, int quant) throws ProdutoNaoExisteException;
    ArrayList<Products> getProductsByCategory(Category category);
    String toString();
+   ArrayList<Products> getProductByManufacturer(String manufacturer);
 }
 ;

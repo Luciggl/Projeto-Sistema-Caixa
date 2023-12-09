@@ -5,6 +5,7 @@ import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 
+import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -15,6 +16,15 @@ public class Estoque implements Model.repositories.Estoque {
 
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
+    }
+
+    public boolean Idexiste(double id){
+        for (Products p : productsEstoque){
+            if (p.getId() == id){
+                return true;
+            }
+        }
+        return false;
     }
 
     public void addEstoque(Products product) throws ProdutoJaExisteException {
@@ -87,6 +97,17 @@ public class Estoque implements Model.repositories.Estoque {
     @Override
     public String toString() {
         return productsEstoque + "\n";
+    }
+
+    @Override
+    public ArrayList<Products> getProductByManufacturer(String manufacturer) {
+        ArrayList<Products> productsManufacturer = new ArrayList<>();
+        for(Products products: productsEstoque){
+            if (products.getManufacturer().equals(manufacturer)){
+                productsManufacturer.add(products);
+            }
+        }
+        return productsManufacturer;
     }
 
     public void salvarEstoque(String filePath) {

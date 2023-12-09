@@ -7,6 +7,7 @@ import Model.exceptions.ProdutoNaoExisteException;
 import Model.services.Estoque;
 
 import javax.swing.*;
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Program {
@@ -20,7 +21,7 @@ public class Program {
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto Por Id\n7 - Salvar \n8 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Sair");
 
                 if (input == null || input.isEmpty()) {
                     option = 7;
@@ -50,7 +51,7 @@ public class Program {
                         break;
 
                     case 6:
-                        pesquisarPorIdOuCategoria(estoque);
+                        pesquisarPorIdOuCategoriaOuFabricante(estoque);
                         break;
 
                     case 7:
@@ -75,14 +76,18 @@ public class Program {
     private static void adicionarProduto(Estoque estoque) {
         try {
             double id = Double.parseDouble(JOptionPane.showInputDialog("ID do produto:"));
-            String name = JOptionPane.showInputDialog("Nome do produto:");
-            String manufacturer = JOptionPane.showInputDialog("Fabricante");
-            Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.Drinks);
-            double value = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:"));
-            int quant = Integer.parseInt((JOptionPane.showInputDialog("Digite a Quantidade em Estoque")));
+            if (!estoque.Idexiste(id)){
+                String name = JOptionPane.showInputDialog("Nome do produto:");
+                String manufacturer = JOptionPane.showInputDialog("Fabricante");
+                Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.ALIMENTO);
+                double value = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:"));
+                int quant = Integer.parseInt((JOptionPane.showInputDialog("Digite a Quantidade em Estoque")));
 
-            Products newProduct = new Products(id, name, manufacturer, category, value, quant);
-            estoque.addEstoque(newProduct);
+                Products newProduct = new Products(id, name, manufacturer, category, value, quant);
+                estoque.addEstoque(newProduct);
+            } else {
+                JOptionPane.showMessageDialog(null, "Id ja cadastrado");
+            }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: Insira valores válidos.");
         } catch (ProdutoJaExisteException e) {
@@ -147,9 +152,9 @@ public class Program {
             return null;
         }
     }
-    private static void pesquisarPorIdOuCategoria(Estoque estoque) {
+    private static void pesquisarPorIdOuCategoriaOuFabricante(Estoque estoque) {
         try {
-            String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Pesquisar por ID\n2 - Pesquisar por Categoria");
+            String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Pesquisar por ID\n2 - Pesquisar por Categoria\n3 - Pesquisar por Fabricante");
             int option = Integer.parseInt(input);
 
             switch (option) {
@@ -161,6 +166,10 @@ public class Program {
                     pesquisarPorCategoria(estoque);
                     break;
 
+                case 3:
+                    pesquisarPorFabricante(estoque);
+                    break;
+                    
                 default:
                     JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
             }
@@ -184,7 +193,7 @@ public class Program {
 
     private static void pesquisarPorCategoria(Estoque estoque) {
         try {
-            Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.Drinks);
+            Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.ALIMENTO);
             ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(category);
 
             if (!produtosPorCategoria.isEmpty()) {
@@ -200,4 +209,24 @@ public class Program {
             JOptionPane.showMessageDialog(null, "Erro ao pesquisar por categoria: " + e.getMessage());
         }
     }
+
+    private static void pesquisarPorFabricante(Estoque estoque) {
+        try {
+            String manufacturer = JOptionPane.showInputDialog("Digite o nome do fabricante:");
+            ArrayList<Products> produtosPorFabricante = estoque.getProductByManufacturer(manufacturer);
+
+            if (!produtosPorFabricante.isEmpty()) {
+                StringBuilder mensagem = new StringBuilder("Produtos do fabricante " + manufacturer + ":\n");
+                for (Products produto : produtosPorFabricante) {
+                    mensagem.append(produto).append("\n");
+                }
+                JOptionPane.showMessageDialog(null, mensagem.toString());
+            } else {
+                JOptionPane.showMessageDialog(null, "Nenhum produto encontrado do fabricante " + manufacturer + ".");
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro ao pesquisar por fabricante: " + e.getMessage());
+        }
+    }
+
 }

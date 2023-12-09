@@ -70,8 +70,6 @@ public class Caixa {
                 JOptionPane.showMessageDialog(null, "Erro ao finalizar a compra: " + e.getMessage());
             }
         }
-
-        JOptionPane.showMessageDialog(null, "Compra realizada com sucesso. Valor total: R$ " + calcularValorTotalCompra());
         produtosCompra.clear();
     }
 

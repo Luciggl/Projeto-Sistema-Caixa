@@ -208,7 +208,7 @@ public class Program {
             ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(category);
 
             if (!produtosPorCategoria.isEmpty()) {
-                StringBuilder mensagem = new StringBuilder("Produtos na categoria " + category + ":\n");
+                StringBuilder mensagem = new StringBuilder("Produtos na categoria \n" + category + ":\n");
                 for (Products produto : produtosPorCategoria) {
                     mensagem.append(produto).append("\n");
                 }
@@ -227,7 +227,7 @@ public class Program {
             ArrayList<Products> produtosPorFabricante = estoque.getProductByManufacturer(manufacturer);
 
             if (!produtosPorFabricante.isEmpty()) {
-                StringBuilder mensagem = new StringBuilder("Produtos do fabricante " + manufacturer + ":\n");
+                StringBuilder mensagem = new StringBuilder("Produtos do fabricante \n" + manufacturer + ":\n");
                 for (Products produto : produtosPorFabricante) {
                     mensagem.append(produto).append("\n");
                 }
@@ -241,7 +241,6 @@ public class Program {
     }
 
     private static void realizarCompra(Caixa caixa) {
-        Date dateStartSale = new Date();
         ArrayList<String> listaCompra = new ArrayList<>();
 
         int option;

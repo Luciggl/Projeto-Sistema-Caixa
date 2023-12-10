@@ -23,7 +23,7 @@
 122,Limpador Multiuso,Veja,LIMPEZA,10.0,55
 123,Iogurte Grego,Danone,LATICINEOS,5.0,27
 124,Escova de Dentes,Oral-B,HIGIENE,5.5,75
-125,Linguiça Calabresa,Perdigão,ACOUGUE,15.0,25
+125,Linguiça Calabresa,Perdigão,ACOUGUE,15.0,23
 126,Papel Higiênico,Neve,TEXTEIS,9.0,48
 127,Desinfetante,Pinho Sol,LIMPEZA,14.0,35
 128,Peito de Frango,Seara,ACOUGUE,18.0,30
@@ -49,53 +49,3 @@
 148,Cenoura,kg,ALIMENTO,3.0,80
 149,Creme Antisséptico,Nivea,HIGIENE,15.0,35
 150,Molho de Tomate,Quero,ALIMENTO,6.0,50
-151,Sabão em Pó,Omo,LIMPEZA,12.0,40
-152,Cerveja,Skol,BEBIDAS,4.5,90
-153,Vinho Tinto,Château,LIMPEZA,30.0,15
-154,Chocolate,Lacta,ALIMENTO,10.0,45
-155,Lâmina de Barbear,Gillette,HIGIENE,5.0,70
-156,Panetone,Bauducco,ALIMENTO,18.0,30
-157,Papel Toalha,Neve,TEXTEIS,8.0,60
-158,Limão,kg,ALIMENTO,8.0,50
-159,Refrigerante,Coca-Cola,BEBIDAS,6.0,75
-160,Pão de Queijo,Ticiana,ALIMENTO,10.0,40
-161,Desodorante,Axe,HIGIENE,18.0,25
-162,Cereal Matinal,Nestlé,ALIMENTO,12.0,35
-163,Salmão,Fresco,ACOUGUE,35.0,20
-164,Escova de Cabelo,Ricca,HIGIENE,8.0,60
-165,Creme Dental Infantil,Colgate,HIGIENE,5.0,70
-166,Kit Churrasco,Tramontina,ALIMENTO,40.0,15
-167,Enlatados,Quero,ALIMENTO,8.0,55
-168,Barra de Cereal,Light,ALIMENTO,4.0,80
-169,Água Sanitária,Brilux,LIMPEZA,6.0,70
-170,Queijo Prato,kg,LATICINEOS,25.0,25
-171,Salsão,kg,ALIMENTO,5.0,60
-172,Máscara Facial,Descartável,LIMPEZA,2.5,100
-173,Luvas de Borracha,Descartáveis,LIMPEZA,8.0,40
-174,Coxa de Frango,Sassami,ACOUGUE,15.0,35
-175,Desodorante Feminino,Nivea,HIGIENE,12.0,40
-176,Maçã,kg,ALIMENTO,7.0,50
-177,Lanterna,Pilhas Inclusas,LIMPEZA,20.0,30
-178,Guardanapo de Papel,Neve,TEXTEIS,5.0,80
-179,Óleo de Soja,Liza,ALIMENTO,6.0,60
-180,Lâmpada,Econômica,LIMPEZA,10.0,45
-181,Banana,kg,ALIMENTO,4.0,70
-182,Aromatizante de Ambiente,Glade,LIMPEZA,8.0,50
-183,Pimentão,kg,ALIMENTO,6.0,55
-184,Sacola Plástica,Pacote com 100,LIMPEZA,15.0,25
-185,Lentilha,Camil,ALIMENTO,5.0,65
-186,Amendoim,kg,ALIMENTO,9.0,40
-187,Vassoura,Cerdas de Nylon,LIMPEZA,12.0,35
-188,Alho,kg,ALIMENTO,12.0,35
-189,Amaciante de Roupas,Comfort,TEXTEIS,10.0,43
-190,Laranja,kg,ALIMENTO,5.0,70
-191,Cotonete,Algodão,LIMPEZA,3.0,90
-192,Linguiça Toscana,kg,ACOUGUE,20.0,30
-193,Condimentos para Salada,Kit,ALIMENTO,8.0,55
-194,Repelente,Off,LIMPEZA,15.0,30
-195,Alface,Unidade,ALIMENTO,3.0,80
-196,Escova de Limpeza,Pisoclean,LIMPEZA,5.0,70
-197,Abacaxi,Unidade,ALIMENTO,6.0,60
-198,Sabão em Barra,Ypê,LIMPEZA,2.5,100
-199,Feijão Preto,Camil,ALIMENTO,6.0,60
-200,Saco de Lixo,Grande,LIMPEZA,10.0,50

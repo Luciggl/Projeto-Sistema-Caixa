@@ -1,8 +1,7 @@
 package Model.services;
 
 public class PaymentsServices {
-    public class ValidadorCartaoCredito {
-
+    public static class ValidadorCartaoCredito {
         public static boolean validarNumeroCartao(String numeroCartao) {
 
             String numeroLimpo = numeroCartao.replaceAll("\\D", "");

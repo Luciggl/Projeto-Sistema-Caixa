@@ -1,20 +1,16 @@
 package Model.entities;
 
-import Model.enums.Category;
-
 import java.io.Serializable;
 import java.util.Objects;
 
 public class Products implements Serializable {
-    private int id;
-    private String name;
-    private String manufacturer;
-    private Model.enums.Category Category;
+    private final int id;
+    private final String name;
+    private final String manufacturer;
+    private final Model.enums.Category Category;
     private Double value;
     private int quanti;
 
-    public Products() {
-    }
 
     public Products(int id, String name, String manufacturer, Model.enums.Category category, Double value, int quanti) {
         this.id = id;
@@ -72,13 +68,7 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return "Product: \n" +
-                "id: " + id + '\n' +
-                "Name: " + name + '\n' +
-                "Manufacturer: " + manufacturer + '\n' +
-                "Category: " + Category + '\n' +
-                "Value: " + value + '\n' +
-                "Quantity: " + quanti + "\n" +
-                "---------------------------------\n";
+        String ProdutoString = name + " Qnt: " + quanti + " R$:" + value + " Id: " + id + "\n" + "---------------------------------\n";
+        return ProdutoString;
     }
 }

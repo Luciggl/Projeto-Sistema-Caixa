@@ -9,7 +9,9 @@ import Model.services.Estoque;
 import Model.services.Caixa;
 
 import javax.swing.*;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 import static Model.services.PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao;
 
@@ -123,7 +125,6 @@ public class Program {
 
     private static void verificarEstoque(Estoque estoque) {
         JOptionPane.showMessageDialog(null, "Estoque Atual:\n" + estoque);
-        System.out.println(estoque);
     }
 
     private static void adicionarQuantidade(Estoque estoque) {
@@ -240,6 +241,7 @@ public class Program {
     }
 
     private static void realizarCompra(Caixa caixa) {
+        Date dateStartSale = new Date();
         ArrayList<String> listaCompra = new ArrayList<>();
 
         int option;
@@ -283,39 +285,44 @@ public class Program {
         } while (true);
 
         caixa.finalizarCompra();
+        Date dateFinal = new Date();
+        SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
+        String DataFimCompra = formato.format(dateFinal);
 
-        int payments = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\n Total R$:" + valorTotalCompra));
+
+        int payments = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
         switch (payments) {
             case 1:
                 double ValorPix = valorTotalCompra - (valorTotalCompra * TaxPayments.taxPix);
-                listaCompra.add("-------------------------------------------" + "\n Total R$: " + ValorPix);
+                listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorPix);
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                    if (validarNumeroCartao(Card)) {
-                        double ValorCredito = valorTotalCompra + valorTotalCompra * TaxPayments.taxCredito;
-                        JOptionPane.showMessageDialog(null, "Transação Aprovada");
-                        listaCompra.add("-------------------------------------------" + "\n Total R$: " + ValorCredito);
-                        JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
-                    }
+                if (validarNumeroCartao(Card)) {
+                    double ValorCredito = valorTotalCompra + valorTotalCompra * TaxPayments.taxCredito;
+                    JOptionPane.showMessageDialog(null, "Transação Aprovada!");
+                    listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorCredito);
+                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
+                }
                 break;
 
             case 3:
                 String CardDeb = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                    if (validarNumeroCartao(CardDeb)) {
-                        JOptionPane.showMessageDialog(null, "Transação Aprovada");
-                        listaCompra.add("-------------------------------------------" + "\n Total R$: " + valorTotalCompra);
-                        JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
-                    }
+                if (validarNumeroCartao(CardDeb)) {
+                    JOptionPane.showMessageDialog(null, "Transação Aprovada!");
+                    listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra);
+                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
+                }
                 break;
             case 4:
                 double ValorRecebido = Double.parseDouble(JOptionPane.showInputDialog(null, "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
                 double Troco = ValorRecebido - valorTotalCompra;
-                listaCompra.add("-------------------------------------------" + "\n Total R$: " + valorTotalCompra + "\n Troco: R$: " + Troco);
+                listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + Troco);
+                JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento valida");

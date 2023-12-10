@@ -5,22 +5,23 @@ import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
 public class Estoque implements Model.repositories.Estoque {
     private ArrayList<Products> productsEstoque = new ArrayList<>();
-
-    public Estoque() {}
-
+    public ArrayList<Products> getEstoque() {
+        return productsEstoque;
+    }
+    public Estoque() {
+    }
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
     }
 
-    public boolean Idexiste(double id){
-        for (Products p : productsEstoque){
-            if (p.getId() == id){
+    public boolean Idexiste(double id) {
+        for (Products p : productsEstoque) {
+            if (p.getId() == id) {
                 return true;
             }
         }
@@ -102,8 +103,8 @@ public class Estoque implements Model.repositories.Estoque {
     @Override
     public ArrayList<Products> getProductByManufacturer(String manufacturer) {
         ArrayList<Products> productsManufacturer = new ArrayList<>();
-        for(Products products: productsEstoque){
-            if (products.getManufacturer().equals(manufacturer)){
+        for (Products products : productsEstoque) {
+            if (products.getManufacturer().equals(manufacturer)) {
                 productsManufacturer.add(products);
             }
         }
@@ -145,7 +146,7 @@ public class Estoque implements Model.repositories.Estoque {
                     double value = Double.parseDouble(parts[4]);
                     int quant = Integer.parseInt(parts[5]);
 
-                    Products product = new Products(id, name,manufacturer,category,value, quant );
+                    Products product = new Products(id, name, manufacturer, category, value, quant);
                     productsEstoque.add(product);
                 }
             }
@@ -164,4 +165,6 @@ public class Estoque implements Model.repositories.Estoque {
 
         return valorTotal;
     }
+
+
 }

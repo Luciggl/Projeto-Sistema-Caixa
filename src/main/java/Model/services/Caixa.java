@@ -8,8 +8,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Caixa {
-    private Estoque estoque;
-    private Map<Products, Integer> produtosCompra;
+    private final Estoque estoque;
+    private final Map<Products, Integer> produtosCompra;
     private double valorTotalCompra;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";

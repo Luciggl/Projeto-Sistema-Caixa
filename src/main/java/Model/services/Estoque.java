@@ -10,6 +10,9 @@ import java.util.ArrayList;
 
 public class Estoque implements Model.repositories.Estoque {
     private ArrayList<Products> productsEstoque = new ArrayList<>();
+
+    BalancoServices balancoServices = new BalancoServices();
+
     public ArrayList<Products> getEstoque() {
         return productsEstoque;
     }
@@ -33,6 +36,7 @@ public class Estoque implements Model.repositories.Estoque {
             throw new ProdutoJaExisteException("Error: Produto já existe no estoque");
         } else {
             productsEstoque.add(product);
+            balancoServices.registrarEntrada(product, product.getQuanti());
         }
     }
 
@@ -41,8 +45,10 @@ public class Estoque implements Model.repositories.Estoque {
         boolean productFound = false;
 
         for (Products p : productsEstoque) {
+            int quant = 0;
             if (p.getId() == id) {
                 productFound = true;
+                balancoServices.registrarSaida(p, quant);
                 productsEstoque.remove(p);
                 break;
             }
@@ -57,6 +63,7 @@ public class Estoque implements Model.repositories.Estoque {
         if (produtoExiste(product)) {
             int newQuant = product.getQuanti() + quant;
             product.setQuanti(newQuant);
+            balancoServices.registrarEntrada(product, quant);
         } else {
             throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
         }
@@ -68,6 +75,7 @@ public class Estoque implements Model.repositories.Estoque {
             if (product.getQuanti() >= quant) {
                 int newQuant = product.getQuanti() - quant;
                 product.setQuanti(newQuant);
+                balancoServices.registrarSaida(product, quant);
             } else {
                 throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
             }
@@ -154,6 +162,11 @@ public class Estoque implements Model.repositories.Estoque {
         } catch (IOException e) {
             System.out.println("Estoque Vazio");
         }
+    }
+
+    public Object transacoes(){
+        balancoServices.exibirTransacoes();
+        return null;
     }
 
     public double calcularValorTotalEstoque() {

@@ -1,4 +1,4 @@
-100,Sabão,Omo,HIGIENE,20.0,46
+100,Sabão,Omo,HIGIENE,20.0,41
 101,Arroz,Tio João,ALIMENTO,8.5,80
 102,Shampoo,Pantene,HIGIENE,25.0,38
 103,Macarrão,Nissin,LIMPEZA,5.5,60
@@ -18,14 +18,14 @@
 117,Queijo Mussarela,Vigor,LATICINEOS,15.0,30
 118,Mamadeira,Avent,INFANTIL,25.0,20
 119,Café,Pilão,BEBIDAS,20.0,50
-120,Condicionador,Seda,HIGIENE,18.0,30
+120,Condicionador,Seda,HIGIENE,18.0,26
 121,Açúcar,União,ALIMENTO,8.0,65
 122,Limpador Multiuso,Veja,LIMPEZA,10.0,55
-123,Iogurte Grego,Danone,LATICINEOS,5.0,27
+123,Iogurte Grego,Danone,LATICINEOS,5.0,24
 124,Escova de Dentes,Oral-B,HIGIENE,5.5,75
 125,Linguiça Calabresa,Perdigão,ACOUGUE,15.0,23
 126,Papel Higiênico,Neve,TEXTEIS,9.0,48
-127,Desinfetante,Pinho Sol,LIMPEZA,14.0,35
+127,Desinfetante,Pinho Sol,LIMPEZA,14.0,31
 128,Peito de Frango,Seara,ACOUGUE,18.0,30
 129,Suco de Laranja,Natural,BEBIDAS,10.0,40
 130,Detergente,Ypê,LIMPEZA,3.5,80
@@ -41,7 +41,7 @@
 140,Lixa de Unha,Marco Boni,HIGIENE,2.0,90
 141,Tomate,kg,ALIMENTO,6.0,60
 142,Condimentos,Pitt,BEBIDAS,8.0,40
-143,Sabonete Líquido,Dove,HIGIENE,10.0,45
+143,Sabonete Líquido,Dove,HIGIENE,10.0,43
 144,Pizza Congelada,Sadia,ALIMENTO,18.0,25
 145,Sorvete,Kibon,BEBIDAS,12.0,30
 146,Azeite de Oliva,Cardeal,ALIMENTO,25.0,20

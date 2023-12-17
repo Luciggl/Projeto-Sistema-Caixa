@@ -5,8 +5,8 @@ import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 import Model.repositories.TaxPayments;
-import Model.services.Estoque;
 import Model.services.Caixa;
+import Model.services.Estoque;
 
 import javax.swing.*;
 import java.text.SimpleDateFormat;
@@ -27,7 +27,7 @@ public class Program {
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Comprar\n9 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Comprar\n9 - trasaçẽos\n10 - Sair");
 
                 if (input == null || input.isEmpty()) {
                     option = 7;
@@ -69,6 +69,10 @@ public class Program {
                         break;
 
                     case 9:
+                        estoque.transacoes();
+                        break;
+
+                    case 10:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
                         break;
@@ -76,7 +80,7 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 9);
+            } while (option != 10);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());

@@ -1,5 +1,7 @@
 package Model.entities;
 
+import Model.enums.Category;
+
 import java.io.Serializable;
 import java.util.Objects;
 
@@ -7,16 +9,16 @@ public class Products implements Serializable {
     private final int id;
     private final String name;
     private final String manufacturer;
-    private final Model.enums.Category Category;
+    private final Category category;
     private Double value;
     private int quanti;
 
 
-    public Products(int id, String name, String manufacturer, Model.enums.Category category, Double value, int quanti) {
+    public Products(int id, String name, String manufacturer, Category category, Double value, int quanti) {
         this.id = id;
         this.name = name;
         this.manufacturer = manufacturer;
-        Category = category;
+        this.category = category;
         this.value = value;
         this.quanti = quanti;
     }
@@ -34,8 +36,8 @@ public class Products implements Serializable {
         return manufacturer;
     }
 
-    public Model.enums.Category getCategory() {
-        return Category;
+    public Category getCategory() {
+        return category;
     }
 
     public Double getValue() {

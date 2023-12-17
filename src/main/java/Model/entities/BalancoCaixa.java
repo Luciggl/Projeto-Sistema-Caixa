@@ -6,20 +6,36 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class BalancoCaixa implements Serializable {
-    private Products Produtos;
+    private Products produtos;
     private int quant;
 
     private String tipo;
 
     private Date date;
 
-    DateFormat dateFormat = new SimpleDateFormat("dd/MM/yyyy HH:mm:ss");
+    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
     public BalancoCaixa() {
     }
 
+    public Products getProdutos() {
+        return produtos;
+    }
+
+    public int getQuant() {
+        return quant;
+    }
+
+    public String getTipo() {
+        return tipo;
+    }
+
+    public Date getDate() {
+        return date;
+    }
+
     public BalancoCaixa(Products produtos, int quant, String tipo, Date date) {
-        this.Produtos = produtos;
+        this.produtos = produtos;
         this.quant = quant;
         this.tipo = tipo;
         this.date = date;
@@ -28,9 +44,8 @@ public class BalancoCaixa implements Serializable {
     @Override
     public String toString() {
         return "Balanco Caixa:\n" +
-                Produtos.getName() + " " + quant +
-                "\ntipo: " + tipo +
-                "\n" + dateFormat.format(date)+
-                "==============================";
+                produtos.getName() + " " + quant +
+                "\ntipo: " + tipo + "\n"+
+                dateFormat.format(date);
     }
 }

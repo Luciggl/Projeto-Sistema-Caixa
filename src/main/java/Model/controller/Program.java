@@ -23,6 +23,8 @@ public class Program {
         Caixa caixa = new Caixa(estoque);
 
         estoque.carregarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
+        estoque.carregarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
+
 
         try {
             int option;
@@ -75,6 +77,7 @@ public class Program {
                     case 10:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
+                        estoque.salvarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
                         break;
 
                     default:
@@ -287,7 +290,7 @@ public class Program {
             }
         } while (true);
 
-        caixa.finalizarCompra();
+
         Date dateFinal = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
         String DataFimCompra = formato.format(dateFinal);
@@ -298,6 +301,7 @@ public class Program {
             case 1:
                 double ValorPix = valorTotalCompra - (valorTotalCompra * TaxPayments.taxPix);
                 listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorPix);
+                caixa.finalizarCompra();
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
@@ -305,6 +309,7 @@ public class Program {
                     double ValorCredito = valorTotalCompra + valorTotalCompra * TaxPayments.taxCredito;
                     JOptionPane.showMessageDialog(null, "Transação Aprovada!");
                     listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorCredito);
+                    caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
@@ -316,6 +321,7 @@ public class Program {
                 if (validarNumeroCartao(CardDeb)) {
                     JOptionPane.showMessageDialog(null, "Transação Aprovada!");
                     listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra);
+                    caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
@@ -325,6 +331,7 @@ public class Program {
                 double ValorRecebido = Double.parseDouble(JOptionPane.showInputDialog(null, "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
                 double Troco = ValorRecebido - valorTotalCompra;
                 listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + Troco);
+                caixa.finalizarCompra();
                 JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 break;
             default:

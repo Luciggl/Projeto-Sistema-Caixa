@@ -16,8 +16,10 @@ public class Estoque implements Model.repositories.Estoque {
     public ArrayList<Products> getEstoque() {
         return productsEstoque;
     }
+
     public Estoque() {
     }
+
     public boolean produtoExiste(Products product) {
         return productsEstoque.contains(product);
     }
@@ -119,6 +121,15 @@ public class Estoque implements Model.repositories.Estoque {
         return productsManufacturer;
     }
 
+    public Products getProductByName(String nomeProduto) {
+        for (Products products : productsEstoque){
+            if (products.getName() == nomeProduto){
+                return products;
+            }
+        }
+        return null;
+    }
+
     public void salvarEstoque(String filePath) {
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (Products product : productsEstoque) {
@@ -164,7 +175,15 @@ public class Estoque implements Model.repositories.Estoque {
         }
     }
 
-    public Object transacoes(){
+    public void salvarTransacao(String path){
+        balancoServices.salvarTransacoes(path);
+    }
+
+    public void carregarTransacao(String path){
+        balancoServices.recuperarTransacoes(path);
+    }
+
+    public Object transacoes() {
         balancoServices.exibirTransacoes();
         return null;
     }
@@ -178,6 +197,5 @@ public class Estoque implements Model.repositories.Estoque {
 
         return valorTotal;
     }
-
 
 }

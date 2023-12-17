@@ -6,10 +6,10 @@ import java.io.Serializable;
 import java.util.Objects;
 
 public class Products implements Serializable {
-    private final int id;
-    private final String name;
-    private final String manufacturer;
-    private final Category category;
+    private int id;
+    private String name;
+    private String manufacturer;
+    private Category category;
     private Double value;
     private int quanti;
 
@@ -21,6 +21,10 @@ public class Products implements Serializable {
         this.category = category;
         this.value = value;
         this.quanti = quanti;
+    }
+
+    public Products(String name){
+        this.name= name;
     }
 
     public int getId() {
@@ -70,7 +74,6 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        String ProdutoString = name + " Qnt: " + quanti + " R$:" + value + " Id: " + id + "\n" + "---------------------------------\n";
-        return ProdutoString;
+        return name + " Qnt: " + quanti + " R$:" + value + " Id: " + id + "\n" + "---------------------------------\n";
     }
 }

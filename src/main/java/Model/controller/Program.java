@@ -329,10 +329,14 @@ public class Program {
                 break;
             case 4:
                 double ValorRecebido = Double.parseDouble(JOptionPane.showInputDialog(null, "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
-                double Troco = ValorRecebido - valorTotalCompra;
-                listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + Troco);
-                caixa.finalizarCompra();
-                JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                if (ValorRecebido >= 0){
+                    double Troco = ValorRecebido - valorTotalCompra;
+                    listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + Troco);
+                    caixa.finalizarCompra();
+                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                }else {
+                    JOptionPane.showMessageDialog(null, "Valor insuficiente para efetuar o Pagamento\nCompra Nâo concluida");
+                }
                 break;
             default:
                 JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento valida");

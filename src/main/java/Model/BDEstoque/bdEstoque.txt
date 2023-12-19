@@ -1,0 +1,1 @@
+100,Arroz,Tio João,ALIMENTO,5.0,90

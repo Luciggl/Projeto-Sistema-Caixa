@@ -44,7 +44,7 @@ public class BalancoServices {
     }
 
     public void salvarTransacoes(String filePath) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
             for (BalancoCaixa balanco : transacao) {
                 writer.write(balanco.getTipo() + "," + balanco.getProdutos().getName() + "," + balanco.getQuant() + "," + dateFormat.format(balanco.getDate()));
                 writer.newLine();

@@ -49,7 +49,7 @@ public class BalancoServices {
                 writer.write(balanco.getTipo() + "," + balanco.getProdutos().getName() + "," + balanco.getQuant() + "," + dateFormat.format(balanco.getDate()));
                 writer.newLine();
             }
-            System.out.print( "Transações salvas com sucesso no arquivo: " + filePath);
+            System.out.print("Transações salvas com sucesso no arquivo: " + filePath);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -65,7 +65,6 @@ public class BalancoServices {
                     String nomeProduto = parts[1];
                     int quantidade = Integer.parseInt(parts[2]);
                     String dataString = parts[3];
-
 
                     try {
                         Date data = dateFormat.parse(dataString);
@@ -84,7 +83,6 @@ public class BalancoServices {
             e.printStackTrace();
         }
     }
-
 
     @Override
     public String toString() {

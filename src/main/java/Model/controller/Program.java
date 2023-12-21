@@ -302,6 +302,7 @@ public class Program {
                 double ValorPix = valorTotalCompra - (valorTotalCompra * TaxPayments.taxPix);
                 listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorPix);
                 caixa.finalizarCompra();
+                JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
@@ -343,4 +344,3 @@ public class Program {
         }
     }
 }
-

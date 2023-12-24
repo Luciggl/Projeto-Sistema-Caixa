@@ -188,6 +188,10 @@ public class Estoque implements Model.repositories.Estoque {
         return null;
     }
 
+    public void PesquisarTransacaoTipo(String tipo){
+        balancoServices.PesquisarTipo(tipo);
+    }
+
     public double calcularValorTotalEstoque() {
         double valorTotal = 0;
 

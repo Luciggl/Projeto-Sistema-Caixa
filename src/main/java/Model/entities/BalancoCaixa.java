@@ -1,7 +1,6 @@
 package Model.entities;
 
 import java.io.Serializable;
-import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,9 +42,9 @@ public class BalancoCaixa implements Serializable {
 
     @Override
     public String toString() {
-        return "Balanco Caixa:\n" +
+        return
                 produtos.getName() + " " + quant +
-                "\ntipo: " + tipo + "\n"+
-                dateFormat.format(date);
+                        "\ntipo: " + tipo + "\n" +
+                        dateFormat.format(date);
     }
 }

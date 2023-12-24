@@ -84,6 +84,17 @@ public class BalancoServices {
         }
     }
 
+    public void PesquisarTipo(String tipo) {
+        ArrayList<BalancoCaixa> TipoConta = new ArrayList<>();
+        for (BalancoCaixa ContasTipo : transacao) {
+            if (ContasTipo.getTipo().equals(tipo)) {
+                TipoConta.add(ContasTipo);
+            }
+        }
+        JOptionPane.showMessageDialog(null, TipoConta);
+    }
+
+
     @Override
     public String toString() {
         return "" + transacao;

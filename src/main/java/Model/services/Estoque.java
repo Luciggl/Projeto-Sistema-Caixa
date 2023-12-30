@@ -143,7 +143,7 @@ public class Estoque implements Model.repositories.Estoque {
                 writer.newLine();
             }
 
-            System.out.println("Estoque salvo com sucesso no arquivo: " + filePath);
+            System.out.println("Estoque salvo com sucesso no arquivo: " + filePath + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,7 +169,7 @@ public class Estoque implements Model.repositories.Estoque {
                     productsEstoque.add(product);
                 }
             }
-            System.out.println("Estoque carregado com sucesso do arquivo: " + filePath);
+            System.out.println("Estoque carregado com sucesso do arquivo: " + filePath + "\n");
         } catch (IOException e) {
             System.out.println("Estoque Vazio");
         }
@@ -179,13 +179,13 @@ public class Estoque implements Model.repositories.Estoque {
         balancoServices.salvarTransacoes(path);
     }
 
+
     public void carregarTransacao(String path){
         balancoServices.recuperarTransacoes(path);
     }
 
-    public Object transacoes() {
+    public void transacoes() {
         balancoServices.exibirTransacoes();
-        return null;
     }
 
     public void PesquisarTransacaoTipo(String tipo){

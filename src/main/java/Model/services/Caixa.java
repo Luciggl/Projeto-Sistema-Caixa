@@ -11,6 +11,7 @@ public class Caixa {
     private final Estoque estoque;
     private final Map<Products, Integer> produtosCompra;
     private double valorTotalCompra;
+    private BalancoServices services;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";
 
@@ -32,6 +33,26 @@ public class Caixa {
         if (produtoExisteNoEstoque(produto, quantidade)) {
             produtosCompra.put(produto, quantidade);
             JOptionPane.showMessageDialog(null, String.format(PRODUTO_ADICIONADO_MSG, produto.getName(), quantidade));
+        }
+    }
+
+    public void removerProduto(Products produto, int quantidade) {
+        if (produtosCompra.containsKey(produto)) {
+            int quantidadeAtual = produtosCompra.get(produto);
+
+            if (quantidade <= quantidadeAtual) {
+                produtosCompra.put(produto, quantidadeAtual - quantidade);
+                JOptionPane.showMessageDialog(null, "Produto removido da lista de compra: " +
+                        produto.getName() + " | Quantidade removida: " + quantidade);
+            } else {
+                JOptionPane.showMessageDialog(null, "Erro ao remover produto: Quantidade superior à quantidade na lista de compra");
+            }
+
+            if (produtosCompra.get(produto) == 0) {
+                produtosCompra.remove(produto);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Erro ao remover produto: Produto não encontrado na lista de compra");
         }
     }
 
@@ -66,6 +87,10 @@ public class Caixa {
             int quantidade = entry.getValue();
             try {
                 estoque.removeQuant(produto, quantidade);
+
+                estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
+                estoque.salvarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
+
             } catch (ProdutoNaoExisteException e) {
                 JOptionPane.showMessageDialog(null, "Erro ao finalizar a compra: " + e.getMessage());
             }

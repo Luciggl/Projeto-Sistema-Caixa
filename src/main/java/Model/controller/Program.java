@@ -4,9 +4,10 @@ import Model.entities.Products;
 import Model.enums.Category;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
-import Model.repositories.TaxPayments;
+import Model.repositories.Path;
 import Model.services.Caixa;
 import Model.services.Estoque;
+import Model.services.PaymentsServices;
 
 import javax.swing.*;
 import java.text.SimpleDateFormat;
@@ -21,8 +22,8 @@ public class Program {
         Estoque estoque = new Estoque();
         Caixa caixa = new Caixa(estoque);
 
-        estoque.carregarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
-        estoque.carregarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
+        estoque.carregarEstoque(Path.pathEstoque);
+        estoque.carregarTransacao(Path.pathTransacao);
 
         try {
             String input = JOptionPane.showInputDialog("Escolha um papel:\n1 - Gerente\n2 - Caixa");
@@ -113,8 +114,8 @@ public class Program {
 
                     case 10:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
-                        estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
-                        estoque.salvarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
+                        estoque.salvarEstoque(Path.pathEstoque);
+                        estoque.salvarTransacao(Path.pathTransacao);
                         break;
 
                     default:
@@ -356,18 +357,36 @@ public class Program {
             if (option == 1) {
                 break;
             }
-        } while (true);
 
+            String[] opcoesCompra = {"Adicionar Produto", "Remover Produto"};
+            int opcaoCompra = JOptionPane.showOptionDialog(
+                    null,
+                    "Escolha uma opção:",
+                    "Adicionar ou Remover Produto",
+                    JOptionPane.DEFAULT_OPTION,
+                    JOptionPane.QUESTION_MESSAGE,
+                    null,
+                    opcoesCompra,
+                    opcoesCompra[0]
+            );
+
+            if (opcaoCompra == 1) {
+                Products produtoRemover = escolherProduto(caixa.getEstoque());
+                int quantidadeRemover = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser removida:"));
+                caixa.removerProduto(produtoRemover, quantidadeRemover);
+                break;
+            }
+        } while (true);
 
         Date dateFinal = new Date();
         SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
         String DataFimCompra = formato.format(dateFinal);
-
+        PaymentsServices paymentsServices = new PaymentsServices();
 
         int payments = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
         switch (payments) {
             case 1:
-                double ValorPix = valorTotalCompra - (valorTotalCompra * TaxPayments.taxPix);
+                double ValorPix = paymentsServices.pagamentoPix(valorTotalCompra);
                 listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorPix);
                 caixa.finalizarCompra();
                 JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
@@ -375,7 +394,7 @@ public class Program {
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
                 if (validarNumeroCartao(Card)) {
-                    double ValorCredito = valorTotalCompra + valorTotalCompra * TaxPayments.taxCredito;
+                    double ValorCredito = paymentsServices.pagamentoCredito(valorTotalCompra);
                     JOptionPane.showMessageDialog(null, "Transação Aprovada!");
                     listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + ValorCredito);
                     caixa.finalizarCompra();
@@ -398,9 +417,8 @@ public class Program {
                 break;
             case 4:
                 double ValorRecebido = Double.parseDouble(JOptionPane.showInputDialog(null, "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
-                if (ValorRecebido >= 0) {
-                    double Troco = ValorRecebido - valorTotalCompra;
-                    listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + Troco);
+                if (ValorRecebido >= valorTotalCompra) {
+                    listaCompra.add("-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nTotal R$: " + valorTotalCompra + "\nTroco R$: " + String.format("%.2f",paymentsServices.CalcularTroco(valorTotalCompra, ValorRecebido)));
                     caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {

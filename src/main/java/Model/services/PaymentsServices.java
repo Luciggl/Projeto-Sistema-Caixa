@@ -1,6 +1,13 @@
 package Model.services;
 
+import Model.repositories.TaxPayments;
+
 public class PaymentsServices {
+
+    private Double valorTotalPorMeioDePagamento;
+    public PaymentsServices(){
+
+    }
     public static class ValidadorCartaoCredito {
         public static boolean validarNumeroCartao(String numeroCartao) {
 
@@ -31,5 +38,22 @@ public class PaymentsServices {
         }
 
     }
+
+    public double pagamentoPix(Double valor){
+        valorTotalPorMeioDePagamento = (valor += (valor * TaxPayments.taxPix));
+        return valorTotalPorMeioDePagamento;
+    }
+
+    public double pagamentoCredito(Double valor){
+        valorTotalPorMeioDePagamento = (valor += (valor * TaxPayments.taxCredito));
+        return valorTotalPorMeioDePagamento;
+    }
+
+    public double CalcularTroco(Double valorTotal, Double valorRecebido){
+        double troco = valorRecebido -= valorTotal;
+        return troco;
+    }
+
+
 
 }

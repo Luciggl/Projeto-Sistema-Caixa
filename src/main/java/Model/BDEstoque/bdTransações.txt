@@ -1,0 +1,11 @@
+Entrada,arroz catua,100,ter. dez. 26 23:22:25 BRT 2023
+Saida,arroz catua,10,ter. dez. 26 23:22:57 BRT 2023
+Saida,arroz catua,10,ter. dez. 26 23:23:47 BRT 2023
+Saida,arroz catua,5,ter. dez. 26 23:24:24 BRT 2023
+Entrada,macarrão parafuso,100,qui. dez. 28 18:00:28 BRT 2023
+Saida,arroz catua,10,qui. dez. 28 18:09:59 BRT 2023
+Saida,arroz catua,1,qui. dez. 28 18:41:20 BRT 2023
+Saida,arroz catua,1,qui. dez. 28 18:42:39 BRT 2023
+Saida,arroz catua,1,qui. dez. 28 18:43:24 BRT 2023
+Saida,arroz catua,1,qui. dez. 28 18:49:53 BRT 2023
+Saida,arroz catua,1,qui. dez. 28 18:51:29 BRT 2023

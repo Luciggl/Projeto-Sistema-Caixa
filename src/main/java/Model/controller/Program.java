@@ -7,6 +7,7 @@ import Model.exceptions.ProdutoNaoExisteException;
 import Model.repositories.Path;
 import Model.services.Caixa;
 import Model.services.Estoque;
+import Model.services.LoginServices;
 import Model.services.PaymentsServices;
 
 import javax.swing.*;
@@ -20,19 +21,23 @@ public class Program {
     public static void main(String[] args) {
         Estoque estoque = new Estoque();
         Caixa caixa = new Caixa(estoque);
+        LoginServices loginServices = new LoginServices();
+
 
         estoque.carregarEstoque(Path.pathEstoque);
         estoque.carregarTransacao(Path.pathTransacao);
 
         try {
-            String input = JOptionPane.showInputDialog("Escolha um papel:\n1 - Gerente\n2 - Caixa");
+            String login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
+            String senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
 
-            if (input == null || input.isEmpty()) {
+
+            if (login == null || login.isEmpty() || senha == null || senha.isEmpty() ) {
                 JOptionPane.showMessageDialog(null, "Saindo do programa.");
                 System.exit(0);
             }
 
-            int papel = Integer.parseInt(input);
+            int papel = loginServices.logar(login, senha);
 
             switch (papel) {
                 case 1:

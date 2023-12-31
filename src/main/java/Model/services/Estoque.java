@@ -6,6 +6,7 @@ import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 public class Estoque implements Model.repositories.Estoque {
@@ -60,7 +61,7 @@ public class Estoque implements Model.repositories.Estoque {
         }
     }
 
-    public void MudarValorProduto(int id, double novoValor) throws ProdutoNaoExisteException{
+    public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoNaoExisteException{
         Products products1 = getProductById(id);
         if (produtoExiste(products1)){
             for(Products p : productsEstoque){
@@ -164,7 +165,7 @@ public class Estoque implements Model.repositories.Estoque {
                     String name = parts[1];
                     String manufacturer = parts[2];
                     Category category = Category.valueOf(parts[3]);
-                    double value = Double.parseDouble(parts[4]);
+                    BigDecimal value = BigDecimal.valueOf(Double.parseDouble(parts[4]));
                     int quant = Integer.parseInt(parts[5]);
 
                     Products product = new Products(id, name, manufacturer, category, value, quant);
@@ -194,13 +195,12 @@ public class Estoque implements Model.repositories.Estoque {
         balancoServices.PesquisarTipo(tipo);
     }
 
-    public double calcularValorTotalEstoque() {
-        double valorTotal = 0;
+    public BigDecimal calcularValorTotalEstoque() {
+        BigDecimal valorTotal = null;
 
         for (Products product : productsEstoque) {
-            valorTotal += product.getValue() * product.getQuanti();
+            valorTotal.add(product.getValue().multiply(BigDecimal.valueOf(product.getQuanti())));
         }
-
         return valorTotal;
     }
 

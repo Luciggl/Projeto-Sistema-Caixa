@@ -10,6 +10,7 @@ import Model.services.Estoque;
 import Model.services.PaymentsServices;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 
 import static Model.services.PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao;
@@ -119,7 +120,7 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 11);
+            } while (option != 10);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
@@ -164,7 +165,7 @@ public class Program {
                 String name = JOptionPane.showInputDialog("Nome do produto:");
                 String manufacturer = JOptionPane.showInputDialog("Fabricante");
                 Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria do Produto:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.ALIMENTO);
-                double value = Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:"));
+                BigDecimal value = BigDecimal.valueOf(Double.parseDouble(JOptionPane.showInputDialog("Valor do produto:")));
                 int quant = Integer.parseInt((JOptionPane.showInputDialog("Digite a Quantidade em Estoque")));
 
                 Products newProduct = new Products(id, name, manufacturer, category, value, quant);
@@ -318,23 +319,27 @@ public class Program {
         ArrayList<String> listaCompra = new ArrayList<>();
 
         int option;
-        double valorTotalCompra = 0;
+        BigDecimal valorTotalCompra = BigDecimal.ZERO;
 
         do {
             Products produtoComprado = escolherProduto(caixa.getEstoque());
 
             if (produtoComprado != null) {
                 int quantidadeComprada = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser comprada:"));
+                if (quantidadeComprada > 0){
+                    try {
+                        caixa.adicionarProduto(produtoComprado, quantidadeComprada);
 
-                try {
-                    caixa.adicionarProduto(produtoComprado, quantidadeComprada);
+                        BigDecimal valorTotalProduto = produtoComprado.getValue().multiply(BigDecimal.valueOf(quantidadeComprada));
 
-                    double valorTotalProduto = produtoComprado.getValue() * quantidadeComprada;
-
-                    listaCompra.add(produtoComprado.getName() + " \n" + quantidadeComprada + " - R$: " + produtoComprado.getValue() + " - Total R$:" + valorTotalProduto);
-                    valorTotalCompra += valorTotalProduto;
-                } catch (ProdutoNaoExisteException e) {
-                    JOptionPane.showMessageDialog(null, "Erro ao adicionar produto à compra: " + e.getMessage());
+                        listaCompra.add(produtoComprado.getName() + " \n" + quantidadeComprada + " - R$: " +
+                                produtoComprado.getValue() + " - Total R$:" + valorTotalProduto);
+                        valorTotalCompra = valorTotalCompra.add(valorTotalProduto);
+                    } catch (ProdutoNaoExisteException e) {
+                        JOptionPane.showMessageDialog(null, "Erro ao adicionar produto à compra: " + e.getMessage());
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "A quantidade de produto não pode ser menor ou igual a 0");
                 }
             } else {
                 break;
@@ -376,10 +381,11 @@ public class Program {
             }
         } while (true);
 
-
         PaymentsServices paymentsServices = new PaymentsServices();
 
-        int payments = Integer.parseInt(JOptionPane.showInputDialog(null, "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
+        int payments = Integer.parseInt(JOptionPane.showInputDialog(null,
+                "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
+
         switch (payments) {
             case 1:
                 String ValorPix = paymentsServices.pagamentoPix(valorTotalCompra);
@@ -389,7 +395,7 @@ public class Program {
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (!validarNumeroCartao(Card)) {
+                if (validarNumeroCartao(Card)) {
                     listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra));
                     caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
@@ -400,7 +406,7 @@ public class Program {
 
             case 3:
                 String CardDeb = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (!validarNumeroCartao(CardDeb)) {
+                if (validarNumeroCartao(CardDeb)) {
                     listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra));
                     caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
@@ -409,8 +415,9 @@ public class Program {
                 }
                 break;
             case 4:
-                double ValorRecebido = Double.parseDouble(JOptionPane.showInputDialog(null, "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
-                if (ValorRecebido >= valorTotalCompra) {
+                BigDecimal ValorRecebido = new BigDecimal(JOptionPane.showInputDialog(null,
+                        "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
+                if (ValorRecebido.compareTo(valorTotalCompra) >= 0) {
                     listaCompra.add(paymentsServices.pagamentoDinheiro(valorTotalCompra, ValorRecebido));
                     caixa.finalizarCompra();
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");

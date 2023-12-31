@@ -3,6 +3,7 @@ package Model.entities;
 import Model.enums.Category;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class Products implements Serializable {
@@ -10,11 +11,11 @@ public class Products implements Serializable {
     private String name;
     private String manufacturer;
     private Category category;
-    private Double value;
+    private BigDecimal value;
     private int quanti;
 
 
-    public Products(int id, String name, String manufacturer, Category category, Double value, int quanti) {
+    public Products(int id, String name, String manufacturer, Category category, BigDecimal value, int quanti) {
         this.id = id;
         this.name = name;
         this.manufacturer = manufacturer;
@@ -44,11 +45,11 @@ public class Products implements Serializable {
         return category;
     }
 
-    public Double getValue() {
+    public BigDecimal getValue() {
         return value;
     }
 
-    public void setValue(Double value) {
+    public void setValue(BigDecimal value) {
         this.value = value;
     }
 

@@ -5,20 +5,20 @@ import Model.exceptions.ProdutoNaoExisteException;
 import Model.repositories.Path;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
 public class Caixa {
     private final Estoque estoque;
     private final Map<Products, Integer> produtosCompra;
-    private double valorTotalCompra;
+    private BigDecimal valorTotalCompra = BigDecimal.ZERO;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";
 
     public Caixa(Estoque estoque) {
         this.estoque = estoque;
         this.produtosCompra = new HashMap<>();
-        this.valorTotalCompra = 0;
     }
 
     public Estoque getEstoque() {
@@ -68,14 +68,13 @@ public class Caixa {
         }
     }
 
-    public double calcularValorTotalCompra() {
-        valorTotalCompra = 0;
+    public BigDecimal calcularValorTotalCompra() {
 
         for (Map.Entry<Products, Integer> entry : produtosCompra.entrySet()) {
             Products produto = entry.getKey();
             int quantidade = entry.getValue();
-            double valorProduto = produto.getValue() * quantidade;
-            valorTotalCompra += valorProduto;
+            BigDecimal valorProduto = produto.getValue().multiply(BigDecimal.valueOf(quantidade));
+            valorTotalCompra.add(valorProduto);
         }
 
         return valorTotalCompra;
@@ -105,7 +104,7 @@ public class Caixa {
         for (Map.Entry<Products, Integer> entry : produtosCompra.entrySet()) {
             Products produto = entry.getKey();
             int quantidade = entry.getValue();
-            double valorProduto = produto.getValue() * quantidade;
+            BigDecimal valorProduto = produto.getValue().add(BigDecimal.valueOf(quantidade));
             result.append(produto.getName())
                     .append(" | Quantidade: ")
                     .append(quantidade)

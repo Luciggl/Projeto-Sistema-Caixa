@@ -1,7 +1,9 @@
 package Model.repositories;
 
+import java.math.BigDecimal;
+
 public interface TaxPayments {
-     double taxPix = 0.1;
-     double taxCredito = 0.06;
+     BigDecimal taxPix = BigDecimal.valueOf(0.1);
+     BigDecimal taxCredito = BigDecimal.valueOf(0.06);
 
 }

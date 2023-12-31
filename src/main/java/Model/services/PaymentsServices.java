@@ -3,20 +3,19 @@ package Model.services;
 import Model.repositories.TaxPayments;
 
 import javax.swing.*;
+import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PaymentsServices {
 
-    private Double valorTotalPorMeioDePagamento;
 
     Date dateFinal = new Date();
     SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
     String DataFimCompra = formato.format(dateFinal);
     String formaPagamento;
 
-    Double valorNaoInformado = 0.0;
 
     public PaymentsServices() {
 
@@ -54,50 +53,47 @@ public class PaymentsServices {
     }
 
 
-    public String pagamentoPix(Double valor) {
+    public String pagamentoPix(BigDecimal valor) {
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        valorTotalPorMeioDePagamento = valor -= CalcularTaxPix(valor);
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: PIX\nValor recebido R$:" + formatarValor(valor) + "\nDesconto R$: " + formatarValor(CalcularTaxPix(valor)) + "\nTaxa Cartão:" + CalcularTaxCredito(valorNaoInformado) + "\nValor total R$:" + formatarValor(valor) + "\nTroco R$:" + formatarValor(CalcularTroco(valorTotalPorMeioDePagamento, valorNaoInformado));
+        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: PIX\nValor Total R$:" + valor + "\nDesconto R$: " + CalcularTaxPix(valor) + "\nTaxa Cartão:" + BigDecimal.ZERO + "\nValor final R$:" + valor.subtract(CalcularTaxPix(valor)) + "\nTroco R$:" + BigDecimal.ZERO;
         return formaPagamento;
     }
 
-    public String pagamentoCredito(Double valor) {
-        valorTotalPorMeioDePagamento = valor += CalcularTaxCredito(valor);
+    public String pagamentoCredito(BigDecimal valor) {
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: CREDITO\nValor recebido R$:" + valor + "\nDesconto R$: " + CalcularTaxPix(valorNaoInformado) + "\nTaxa Cartão:" + String.format("%.2f",CalcularTaxCredito(valor)) + "\nValor total R$:" + valor + "\nTroco R$:" + CalcularTroco(valorNaoInformado, valorNaoInformado);
+        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: CREDITO\nValor Total R$:" + valor + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão:" + formatarValor(CalcularTaxCredito(valor)) + "\nValor final R$:" + valor.add(CalcularTaxCredito(valor)) + "\nTroco R$:" + BigDecimal.ZERO;
         return formaPagamento;
     }
 
-    public String pagamentoDebito(Double valor) {
-        valorTotalPorMeioDePagamento = valor;
+    public String pagamentoDebito(BigDecimal valor) {
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: DEBITO\nValor recebido R$:" + valor + "\nDesconto R$: " + CalcularTaxPix(valorNaoInformado) + "\nTaxa Cartão R$:" + CalcularTaxCredito(valorNaoInformado) + "\nValor total R$:" + valor + "\nTroco R$:" + CalcularTroco(valorNaoInformado, valorNaoInformado);
+        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: DEBITO\nValor Total R$:" + valor + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + BigDecimal.ZERO;
         return formaPagamento;
     }
 
-    public String pagamentoDinheiro(double valor, double valorRecebido) {
+    public String pagamentoDinheiro(BigDecimal valor, BigDecimal valorRecebido) {
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: DINHEIRO\nValor recebido R$:" + valorRecebido + "\nDesconto R$: " + CalcularTaxPix(valorNaoInformado) + "\nTaxa Cartão R$:" + CalcularTaxCredito(0.0) + "\nValor total R$:" + valor + "\nTroco R$:" + CalcularTroco(valor, valorRecebido);
+        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\n-------------------------------------------\nForma de pagamento: DINHEIRO\nValor recebido R$:" + valorRecebido + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + formatarValor(CalcularTroco(valor, valorRecebido));
         return formaPagamento;
     }
 
-    private String formatarValor(double valor) {
+    private String formatarValor(BigDecimal valor) {
         DecimalFormat formato = new DecimalFormat("#,##0.00");
         return formato.format(valor);
     }
 
-    public double CalcularTaxPix(Double valor) {
-        return (valor * TaxPayments.taxPix);
+    public BigDecimal CalcularTaxPix(BigDecimal valor) {
+        return (valor.multiply(TaxPayments.taxPix));
     }
 
-    public double CalcularTaxCredito(Double valor) {
-        return (valor * TaxPayments.taxCredito);
+    public BigDecimal CalcularTaxCredito(BigDecimal valor) {
+        return (valor.multiply(TaxPayments.taxCredito));
     }
 
-    public double CalcularTroco(Double valorTotal, Double valorRecebido) {
-        if (valorRecebido >= valorTotal){
-            return valorRecebido -= valorTotal;
-        } else return 0;
+    public BigDecimal CalcularTroco(BigDecimal valorTotal, BigDecimal valorRecebido) {
+        if (valorRecebido.compareTo(valorTotal) >= 0) {
+            return valorRecebido.subtract(valorTotal);
+        } else return BigDecimal.ZERO;
     }
 
 

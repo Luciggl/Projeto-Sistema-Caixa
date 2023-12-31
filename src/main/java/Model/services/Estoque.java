@@ -60,6 +60,17 @@ public class Estoque implements Model.repositories.Estoque {
         }
     }
 
+    public void MudarValorProduto(int id, double novoValor) throws ProdutoNaoExisteException{
+        Products products1 = getProductById(id);
+        if (produtoExiste(products1)){
+            for(Products p : productsEstoque){
+                products1.setValue(novoValor);
+            }
+        } else {
+            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+        }
+    }
+
     @Override
     public void AddQuant(Products product, int quant) throws ProdutoNaoExisteException {
         if (produtoExiste(product)) {
@@ -119,15 +130,6 @@ public class Estoque implements Model.repositories.Estoque {
             }
         }
         return productsManufacturer;
-    }
-
-    public Products getProductByName(String nomeProduto) {
-        for (Products products : productsEstoque){
-            if (products.getName() == nomeProduto){
-                return products;
-            }
-        }
-        return null;
     }
 
     public void salvarEstoque(String filePath) {

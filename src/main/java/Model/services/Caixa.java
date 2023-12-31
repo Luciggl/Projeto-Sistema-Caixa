@@ -2,6 +2,7 @@ package Model.services;
 
 import Model.entities.Products;
 import Model.exceptions.ProdutoNaoExisteException;
+import Model.repositories.Path;
 
 import javax.swing.*;
 import java.util.HashMap;
@@ -11,7 +12,6 @@ public class Caixa {
     private final Estoque estoque;
     private final Map<Products, Integer> produtosCompra;
     private double valorTotalCompra;
-    private BalancoServices services;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";
 
@@ -88,8 +88,8 @@ public class Caixa {
             try {
                 estoque.removeQuant(produto, quantidade);
 
-                estoque.salvarEstoque("src/main/java/Model/BDEstoque/bdEstoque.txt");
-                estoque.salvarTransacao("src/main/java/Model/BDEstoque/bdTransações.txt");
+                estoque.salvarEstoque(Path.pathEstoque);
+                estoque.salvarTransacao(Path.pathTransacao);
 
             } catch (ProdutoNaoExisteException e) {
                 JOptionPane.showMessageDialog(null, "Erro ao finalizar a compra: " + e.getMessage());

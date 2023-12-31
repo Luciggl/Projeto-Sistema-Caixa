@@ -1,2 +1,2 @@
-100,arroz catua,tio joão,ALIMENTO,5.59,60
-101,macarrão parafuso,vitarela,ALIMENTO,5.5,100
+100,arroz catua,tio joão,ALIMENTO,5.59,41
+101,macarrão parafuso,vitarela,ALIMENTO,5.5,86

@@ -9,3 +9,16 @@ Saida,arroz catua,1,qui. dez. 28 18:42:39 BRT 2023
 Saida,arroz catua,1,qui. dez. 28 18:43:24 BRT 2023
 Saida,arroz catua,1,qui. dez. 28 18:49:53 BRT 2023
 Saida,arroz catua,1,qui. dez. 28 18:51:29 BRT 2023
+Saida,macarrão parafuso,2,sáb. dez. 30 15:49:06 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 15:50:56 BRT 2023
+Saida,macarrão parafuso,1,sáb. dez. 30 15:52:21 BRT 2023
+Saida,arroz catua,2,sáb. dez. 30 15:53:53 BRT 2023
+Saida,macarrão parafuso,10,sáb. dez. 30 19:25:59 BRT 2023
+Saida,arroz catua,10,sáb. dez. 30 19:26:00 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:35:59 BRT 2023
+Saida,macarrão parafuso,1,sáb. dez. 30 19:36:52 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:37:26 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:45:10 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:47:33 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:49:22 BRT 2023
+Saida,arroz catua,1,sáb. dez. 30 19:50:20 BRT 2023

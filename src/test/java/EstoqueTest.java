@@ -6,7 +6,6 @@ import Model.services.Estoque;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.io.*;
 import java.util.ArrayList;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -193,44 +192,26 @@ class EstoqueTest {
             fail("Exception not expected: " + e.getMessage());
         }
     }
-
-    private void salvarEstoque(String filePath, Products... products) {
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-            for (Products product : products) {
-                writer.write(
-                        product.getId() + "," +
-                                product.getName() + "," +
-                                product.getManufacturer() + "," +
-                                product.getCategory() + "," +
-                                product.getValue() + "," +
-                                product.getQuanti());
-                writer.newLine();
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
+    @Test
+    public void testMudarValorProduto() throws ProdutoNaoExisteException {
+        Products product = new Products(1, "Produto1", "Fabricante", Category.LIMPEZA, 100.0, 10);
+        try {
+            estoque.addEstoque(product);
+        } catch (ProdutoJaExisteException e) {
+            fail("Não deveria lançar exceção aqui");
         }
+
+        estoque.MudarValorProduto(1, 150.0);
+
+        assertEquals(150.0, product.getValue(), 0.001);
     }
 
-    private ArrayList<Products> carregarEstoque(String filePath) {
-        ArrayList<Products> productsList = new ArrayList<>();
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] parts = line.split(",");
-                if (parts.length >= 6) {
-                    int id = Integer.parseInt(parts[0]);
-                    String name = parts[1];
-                    String manufacturer = parts[2];
-                    Category category = Category.valueOf(parts[3]);
-                    double value = Double.parseDouble(parts[4]);
-                    int quant = Integer.parseInt(parts[5]);
-                    Products product = new Products(id, name, manufacturer, category, value, quant);
-                    productsList.add(product);
-                }
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return productsList;
+    @Test
+    public void testMudarValorProdutoProdutoNaoExistente() {
+        ProdutoNaoExisteException exception = assertThrows(ProdutoNaoExisteException.class, () -> {
+            estoque.MudarValorProduto(1, 150.0);
+        });
+
+        assertEquals("Error: Produto não existe no estoque", exception.getMessage());
     }
 }

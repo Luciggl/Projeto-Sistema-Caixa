@@ -14,8 +14,6 @@ public class BalancoCaixa implements Serializable {
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
 
-    public BalancoCaixa() {
-    }
 
     public Products getProdutos() {
         return produtos;

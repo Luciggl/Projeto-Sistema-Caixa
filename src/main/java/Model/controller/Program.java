@@ -4,8 +4,7 @@ import Model.entities.Products;
 import Model.entities.User;
 import Model.enums.Category;
 import Model.enums.FunctionUser;
-import Model.exceptions.ProdutoJaExisteException;
-import Model.exceptions.ProdutoNaoExisteException;
+import Model.exceptions.ProdutoException;
 import Model.exceptions.UserExceptions;
 import Model.repositories.Path;
 import Model.services.Caixa;
@@ -126,7 +125,7 @@ public class Program {
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - transações\n9 - Buscar Transações\n10 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Criar Usuario\n2 - Remover Usuario\n3 - Verificar Estoque\n4 - Alterar valor Produto\n5 - transações\n6 - Buscar Transações\n7 - Sair");
                 LoginServices loginServices = new LoginServices();
 
                 if (input == null || input.isEmpty()) {
@@ -144,12 +143,19 @@ public class Program {
                         removerUsuario(loginServices);
                         break;
                     case 3:
-
+                        for (Products products : estoque.getEstoque()) {
+                            JOptionPane.showMessageDialog(null, products);
+                        }
                     case 4:
+                        int id = Integer.parseInt(JOptionPane.showInputDialog("digite o Id do produto: "));
+                        BigDecimal valor = BigDecimal.valueOf(Long.parseLong(JOptionPane.showInputDialog("Digite o novo valor: ")));
+
+                        estoque.MudarValorProduto(id, valor);
+                    case 5:
                         estoque.transacoes();
                         break;
 
-                    case 5:
+                    case 6:
                         int opcao = Integer.parseInt(JOptionPane.showInputDialog("pesquisar por:\n1 - Entrada \n2 - saida"));
                         switch (opcao) {
                             case 1:
@@ -163,7 +169,7 @@ public class Program {
                         }
                         break;
 
-                    case 6:
+                    case 7:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque(Path.pathEstoque);
                         estoque.salvarTransacao(Path.pathTransacao);
@@ -286,7 +292,7 @@ public class Program {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: Insira valores válidos.");
-        } catch (ProdutoJaExisteException e) {
+        } catch (ProdutoException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: " + e.getMessage());
         }
     }
@@ -304,7 +310,7 @@ public class Program {
             }
         } catch (NumberFormatException e) {
             JOptionPane.showMessageDialog(null, "Erro ao remover produto: Insira um ID válido.");
-        } catch (ProdutoNaoExisteException e) {
+        } catch (ProdutoException e) {
             JOptionPane.showMessageDialog(null, "Erro ao remover produto: " + e.getMessage());
         }
     }
@@ -321,7 +327,7 @@ public class Program {
             Products productToAddQuant = estoque.getProductById(idToAddQuant);
             estoque.AddQuant(productToAddQuant, addQuantity);
             JOptionPane.showMessageDialog(null, "Quantidade adicionada ao estoque.");
-        } catch (NumberFormatException | ProdutoNaoExisteException e) {
+        } catch (NumberFormatException | ProdutoException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar quantidade: " + e.getMessage());
         }
     }
@@ -334,7 +340,7 @@ public class Program {
             Products productToRemoveQuant = estoque.getProductById(idToRemoveQuant);
             estoque.removeQuant(productToRemoveQuant, removeQuantity);
             JOptionPane.showMessageDialog(null, "Quantidade removida do estoque.");
-        } catch (NumberFormatException | ProdutoNaoExisteException e) {
+        } catch (NumberFormatException | ProdutoException e) {
             JOptionPane.showMessageDialog(null, "Erro ao remover quantidade: " + e.getMessage());
         }
     }
@@ -446,7 +452,7 @@ public class Program {
                         listaCompra.add(produtoComprado.getName() + " \n" + quantidadeComprada + " - R$: " +
                                 produtoComprado.getValue() + " - Total R$:" + valorTotalProduto);
                         valorTotalCompra = valorTotalCompra.add(valorTotalProduto);
-                    } catch (ProdutoNaoExisteException e) {
+                    } catch (ProdutoException e) {
                         JOptionPane.showMessageDialog(null, "Erro ao adicionar produto à compra: " + e.getMessage());
                     }
                 } else {

@@ -2,8 +2,7 @@ package Model.services;
 
 import Model.entities.Products;
 import Model.enums.Category;
-import Model.exceptions.ProdutoJaExisteException;
-import Model.exceptions.ProdutoNaoExisteException;
+import Model.exceptions.ProdutoException;
 
 import java.io.*;
 import java.math.BigDecimal;
@@ -34,9 +33,9 @@ public class Estoque implements Model.repositories.Estoque {
         return false;
     }
 
-    public void addEstoque(Products product) throws ProdutoJaExisteException {
+    public void addEstoque(Products product) throws ProdutoException {
         if (produtoExiste(product)) {
-            throw new ProdutoJaExisteException("Error: Produto já existe no estoque");
+            throw new ProdutoException("Error: Produto já existe no estoque");
         } else {
             productsEstoque.add(product);
             balancoServices.registrarEntrada(product, product.getQuanti());
@@ -44,7 +43,7 @@ public class Estoque implements Model.repositories.Estoque {
     }
 
     @Override
-    public void removeEstoque(Products product, int id) throws ProdutoNaoExisteException {
+    public void removeEstoque(Products product, int id) throws ProdutoException {
         boolean productFound = false;
 
         for (Products p : productsEstoque) {
@@ -57,44 +56,44 @@ public class Estoque implements Model.repositories.Estoque {
             }
         }
         if (!productFound) {
-            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+            throw new ProdutoException("Error: Produto não existe no estoque");
         }
     }
 
-    public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoNaoExisteException{
+    public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoException{
         Products products1 = getProductById(id);
         if (produtoExiste(products1)){
             for(Products p : productsEstoque){
                 products1.setValue(novoValor);
             }
         } else {
-            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+            throw new ProdutoException("Error: Produto não existe no estoque");
         }
     }
 
     @Override
-    public void AddQuant(Products product, int quant) throws ProdutoNaoExisteException {
+    public void AddQuant(Products product, int quant) throws ProdutoException {
         if (produtoExiste(product)) {
             int newQuant = product.getQuanti() + quant;
             product.setQuanti(newQuant);
             balancoServices.registrarEntrada(product, quant);
         } else {
-            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+            throw new ProdutoException("Error: Produto não existe no estoque");
         }
     }
 
     @Override
-    public void removeQuant(Products product, int quant) throws ProdutoNaoExisteException {
+    public void removeQuant(Products product, int quant) throws ProdutoException {
         if (produtoExiste(product)) {
             if (product.getQuanti() >= quant) {
                 int newQuant = product.getQuanti() - quant;
                 product.setQuanti(newQuant);
                 balancoServices.registrarSaida(product, quant);
             } else {
-                throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+                throw new ProdutoException("Error: Produto não existe no estoque");
             }
         } else {
-            throw new ProdutoNaoExisteException("Error: Produto não existe no estoque");
+            throw new ProdutoException("Error: Produto não existe no estoque");
         }
     }
 

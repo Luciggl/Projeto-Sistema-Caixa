@@ -1,7 +1,7 @@
 package Model.services;
 
 import Model.entities.Products;
-import Model.exceptions.ProdutoNaoExisteException;
+import Model.exceptions.ProdutoException;
 import Model.repositories.Path;
 
 import javax.swing.*;
@@ -29,14 +29,14 @@ public class Caixa {
         return produtosCompra;
     }
 
-    public void adicionarProduto(Products produto, int quantidade) throws ProdutoNaoExisteException {
+    public void adicionarProduto(Products produto, int quantidade) throws ProdutoException {
         if (produtoExisteNoEstoque(produto, quantidade)) {
             produtosCompra.put(produto, quantidade);
             JOptionPane.showMessageDialog(null, String.format(PRODUTO_ADICIONADO_MSG, produto.getName(), quantidade));
-        }
+        } throw new ProdutoException("O Produto Não foi encontrado");
     }
 
-    public void removerProduto(Products produto, int quantidade) {
+    public void removerProduto(Products produto, int quantidade) throws ProdutoException{
         if (produtosCompra.containsKey(produto)) {
             int quantidadeAtual = produtosCompra.get(produto);
 
@@ -44,27 +44,22 @@ public class Caixa {
                 produtosCompra.put(produto, quantidadeAtual - quantidade);
                 JOptionPane.showMessageDialog(null, "Produto removido da lista de compra: " +
                         produto.getName() + " | Quantidade removida: " + quantidade);
-            } else {
-                JOptionPane.showMessageDialog(null, "Erro ao remover produto: Quantidade superior à quantidade na lista de compra");
-            }
+            } throw new ProdutoException("Erro ao remover produto: Quantidade superior à quantidade na lista de compra");
 
-            if (produtosCompra.get(produto) == 0) {
-                produtosCompra.remove(produto);
-            }
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao remover produto: Produto não encontrado na lista de compra");
         }
     }
 
-    private boolean produtoExisteNoEstoque(Products produto, int quantidade) throws ProdutoNaoExisteException {
+    private boolean produtoExisteNoEstoque(Products produto, int quantidade) throws ProdutoException {
         if (estoque.produtoExiste(produto) && estoque.getProductById(produto.getId()) != null) {
             if (estoque.getProductById(produto.getId()).getQuanti() >= quantidade) {
                 return true;
             } else {
-                throw new ProdutoNaoExisteException("Error: Quantidade indisponível em estoque para o produto " + produto.getName());
+                throw new ProdutoException("Error: Quantidade indisponível em estoque para o produto " + produto.getName());
             }
         } else {
-            throw new ProdutoNaoExisteException("Error: Produto não encontrado no estoque");
+            throw new ProdutoException("Error: Produto não encontrado no estoque");
         }
     }
 
@@ -90,7 +85,7 @@ public class Caixa {
                 estoque.salvarEstoque(Path.pathEstoque);
                 estoque.salvarTransacao(Path.pathTransacao);
 
-            } catch (ProdutoNaoExisteException e) {
+            } catch (ProdutoException e) {
                 JOptionPane.showMessageDialog(null, "Erro ao finalizar a compra: " + e.getMessage());
             }
         }

@@ -1,7 +1,9 @@
 package Model.controller;
 
 import Model.entities.Products;
+import Model.entities.User;
 import Model.enums.Category;
+import Model.enums.FunctionUser;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
 import Model.repositories.Path;
@@ -11,6 +13,7 @@ import Model.services.LoginServices;
 import Model.services.PaymentsServices;
 
 import javax.swing.*;
+import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
@@ -26,35 +29,92 @@ public class Program {
 
         estoque.carregarEstoque(Path.pathEstoque);
         estoque.carregarTransacao(Path.pathTransacao);
+        loginServices.CarregarUsuarios(Path.pathUsers);
 
-        try {
-            String login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
-            String senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
+        if (!loginServices.ListaDeUserEstaVazia()) {
+            try {
+                String login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
+                String senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
 
 
-            if (login == null || login.isEmpty() || senha == null || senha.isEmpty() ) {
-                JOptionPane.showMessageDialog(null, "Saindo do programa.");
-                System.exit(0);
+                if (login == null || login.isEmpty() || senha == null || senha.isEmpty()) {
+                    JOptionPane.showMessageDialog(null, "Saindo do programa.");
+                    System.exit(0);
+                }
+
+                int papel = loginServices.logar(login, senha);
+
+                switch (papel) {
+                    case 1:
+                        menuGerente(estoque, caixa);
+                        break;
+
+                    case 2:
+                        menuCaixa(caixa);
+                        break;
+
+                    case 3:
+                        menuEstoquista(estoque);
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
+                }
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
             }
-
-            int papel = loginServices.logar(login, senha);
-
-            switch (papel) {
-                case 1:
-                    menuGerente(estoque, caixa);
-                    break;
-
-                case 2:
-                    menuCaixa(caixa);
-                    break;
-
-                default:
-                    JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
+        } else {
+            criarPrimeiroUsuario(loginServices);
         }
+
+    }
+
+    private static void criarPrimeiroUsuario(LoginServices loginServices) {
+        JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
+        JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
+        String nome = JOptionPane.showInputDialog("nome do funcionario");
+        try {
+            if (verificarSeEstaVazioNull(nome)) {
+                String login = JOptionPane.showInputDialog("login do funcionario");
+                if (verificarSeEstaVazioNull(login)) {
+                    String senha = JOptionPane.showInputDialog("senha do funcionario");
+                    if (verificarSeEstaVazioNull(senha)) {
+                        loginServices.adicionarUsuario(new User(nome, login, senha, FunctionUser.GERENTE));
+                        JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+                    } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
+            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
+        } catch (HeadlessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+    private static void removerUsuario(LoginServices loginServices) {
+        String login = JOptionPane.showInputDialog("Digite o login do funcionario que deseja remover");
+        User user = loginServices.findByLogin(login);
+        try {
+            if (loginServices.usuarioExiste(user)) {
+                loginServices.removerUsuario(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void criarUsuario(LoginServices loginServices) {
+        String nome = JOptionPane.showInputDialog("nome do funcionario");
+        String login = JOptionPane.showInputDialog("login do funcionario");
+        String senha = JOptionPane.showInputDialog("senha do funcionario");
+        FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
+        try {
+            loginServices.adicionarUsuario(new User(nome, login, senha, function));
+            JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+        } catch (HeadlessException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     private static void menuGerente(Estoque estoque, Caixa caixa) {
@@ -62,6 +122,94 @@ public class Program {
             int option;
             do {
                 String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - transações\n9 - Buscar Transações\n10 - Sair");
+                LoginServices loginServices = new LoginServices();
+
+                if (input == null || input.isEmpty()) {
+                    option = 6;
+                } else {
+                    option = Integer.parseInt(input);
+                }
+
+                switch (option) {
+                    case 1:
+                        criarUsuario(loginServices);
+                        break;
+
+                    case 2:
+                        removerUsuario(loginServices);
+                        break;
+                    case 3:
+
+                    case 4:
+                        estoque.transacoes();
+                        break;
+
+                    case 5:
+                        int opcao = Integer.parseInt(JOptionPane.showInputDialog("pesquisar por:\n1 - Entrada \n2 - saida"));
+                        switch (opcao) {
+                            case 1:
+                                estoque.PesquisarTransacaoTipo("Entrada");
+                                break;
+                            case 2:
+                                estoque.PesquisarTransacaoTipo("Saida");
+                                break;
+                            default:
+                                JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                        }
+                        break;
+
+                    case 6:
+                        JOptionPane.showMessageDialog(null, "Saindo do programa.");
+                        estoque.salvarEstoque(Path.pathEstoque);
+                        estoque.salvarTransacao(Path.pathTransacao);
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                }
+            } while (option != 6);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
+        }
+    }
+
+    private static void menuCaixa(Caixa caixa) {
+        try {
+            int option;
+            do {
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Comprar\n2 - Sair");
+
+                if (input == null || input.isEmpty()) {
+                    option = 2;
+                } else {
+                    option = Integer.parseInt(input);
+                }
+
+                switch (option) {
+                    case 1:
+                        realizarCompra(caixa);
+                        break;
+
+                    case 2:
+                        JOptionPane.showMessageDialog(null, "Saindo do caixa.");
+                        break;
+
+                    default:
+                        JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
+                }
+            } while (option != 2);
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
+        }
+    }
+
+    private static void menuEstoquista(Estoque estoque) {
+        try {
+            int option;
+            do {
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Adicionar Produto\n2 - Remover Produto\n3 - Verificar Estoque\n4 - Adicionar Quantidade\n5 - Remover Quantidade\n6 - Pesquisar Produto\n7 - Salvar \n8 - Sair");
 
                 if (input == null || input.isEmpty()) {
                     option = 10;
@@ -99,24 +247,6 @@ public class Program {
                         break;
 
                     case 8:
-                        estoque.transacoes();
-                        break;
-
-                    case 9:
-                        int opcao = Integer.parseInt(JOptionPane.showInputDialog("pesquisar por:\n1 - Entrada \n2 - saida"));
-                        switch (opcao) {
-                            case 1:
-                                estoque.PesquisarTransacaoTipo("Entrada");
-                                break;
-                            case 2:
-                                estoque.PesquisarTransacaoTipo("Saida");
-                                break;
-                            default:
-                                JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
-                        }
-                        break;
-
-                    case 10:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque(Path.pathEstoque);
                         estoque.salvarTransacao(Path.pathTransacao);
@@ -125,42 +255,13 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 10);
+            } while (option != 8);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
         }
-    }
 
-    private static void menuCaixa(Caixa caixa) {
-        try {
-            int option;
-            do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Comprar\n2 - Sair");
 
-                if (input == null || input.isEmpty()) {
-                    option = 2;
-                } else {
-                    option = Integer.parseInt(input);
-                }
-
-                switch (option) {
-                    case 1:
-                        realizarCompra(caixa);
-                        break;
-
-                    case 2:
-                        JOptionPane.showMessageDialog(null, "Saindo do caixa.");
-                        break;
-
-                    default:
-                        JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
-                }
-            } while (option != 2);
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
-        }
     }
 
     private static void adicionarProduto(Estoque estoque) {
@@ -331,7 +432,7 @@ public class Program {
 
             if (produtoComprado != null) {
                 int quantidadeComprada = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser comprada:"));
-                if (quantidadeComprada > 0){
+                if (quantidadeComprada > 0) {
                     try {
                         caixa.adicionarProduto(produtoComprado, quantidadeComprada);
 
@@ -433,5 +534,9 @@ public class Program {
             default:
                 JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento valida");
         }
+    }
+
+    private static boolean verificarSeEstaVazioNull(String validar) {
+        return validar != null && validar.isEmpty();
     }
 }

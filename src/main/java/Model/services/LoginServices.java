@@ -22,7 +22,7 @@ public class LoginServices {
         if (!usuarioExiste(user)) {
             users.add(user);
             SalvarUsuarios(Path.pathUsers);
-        } throw new UserExceptions("Usuario ja cadastrado");
+        } else throw new UserExceptions("Usuario ja cadastrado");
 
     }
 

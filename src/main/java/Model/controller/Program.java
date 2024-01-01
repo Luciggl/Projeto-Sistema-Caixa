@@ -46,7 +46,7 @@ public class Program {
 
                 switch (papel) {
                     case 1:
-                        menuGerente(estoque, caixa);
+                        menuGerente(estoque, caixa, loginServices);
                         break;
 
                     case 2:
@@ -121,15 +121,13 @@ public class Program {
         }
     }
 
-    private static void menuGerente(Estoque estoque, Caixa caixa) {
+    private static void menuGerente(Estoque estoque, Caixa caixa, LoginServices loginServices) {
         try {
             int option;
             do {
                 String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Criar Usuario\n2 - Remover Usuario\n3 - Verificar Estoque\n4 - Alterar valor Produto\n5 - transações\n6 - Buscar Transações\n7 - Sair");
-                LoginServices loginServices = new LoginServices();
-
                 if (input == null || input.isEmpty()) {
-                    option = 6;
+                    option = 7;
                 } else {
                     option = Integer.parseInt(input);
                 }
@@ -142,15 +140,19 @@ public class Program {
                     case 2:
                         removerUsuario(loginServices);
                         break;
+
                     case 3:
                         for (Products products : estoque.getEstoque()) {
                             JOptionPane.showMessageDialog(null, products);
                         }
+                        break; // Adicionei o break para corrigir o problema
+
                     case 4:
                         int id = Integer.parseInt(JOptionPane.showInputDialog("digite o Id do produto: "));
                         BigDecimal valor = BigDecimal.valueOf(Long.parseLong(JOptionPane.showInputDialog("Digite o novo valor: ")));
-
                         estoque.MudarValorProduto(id, valor);
+                        break; // Adicionei o break para corrigir o problema
+
                     case 5:
                         estoque.transacoes();
                         break;
@@ -167,7 +169,7 @@ public class Program {
                             default:
                                 JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                         }
-                        break;
+                        break; // Adicionei o break para corrigir o problema
 
                     case 7:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
@@ -178,7 +180,7 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 6);
+            } while (option != 7);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());

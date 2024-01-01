@@ -70,7 +70,7 @@ public class Program {
 
     }
 
-    private static void criarPrimeiroUsuario(LoginServices loginServices) throws UserExceptions{
+    private static void criarPrimeiroUsuario(LoginServices loginServices) throws UserExceptions {
         JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
         JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
         String nome = JOptionPane.showInputDialog("nome do funcionario");
@@ -102,18 +102,20 @@ public class Program {
         }
     }
 
-    private static void criarUsuario(LoginServices loginServices) throws UserExceptions{
+    private static void criarUsuario(LoginServices loginServices) throws UserExceptions {
         String nome = JOptionPane.showInputDialog("nome do funcionario");
         try {
             if (verificarSeEstaVazioNull(nome)) {
                 String login = JOptionPane.showInputDialog("login do funcionario");
                 if (verificarSeEstaVazioNull(login)) {
-                    String senha = JOptionPane.showInputDialog("senha do funcionario");
-                    if (verificarSeEstaVazioNull(senha)) {
-                        FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
-                        loginServices.adicionarUsuario(new User(nome, login, senha, function));
-                        JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
-                    } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                    if (!loginServices.usuarioExiste(loginServices.findByLogin(login))) {
+                        String senha = JOptionPane.showInputDialog("senha do funcionario");
+                        if (verificarSeEstaVazioNull(senha)) {
+                            FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
+                            loginServices.adicionarUsuario(new User(nome, login, senha, function));
+                            JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+                        } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                    } else JOptionPane.showMessageDialog(null, "Usuario ja cadastrado com Esse login");
                 } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
             } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
         } catch (RuntimeException e) {
@@ -145,13 +147,13 @@ public class Program {
                         for (Products products : estoque.getEstoque()) {
                             JOptionPane.showMessageDialog(null, products);
                         }
-                        break; // Adicionei o break para corrigir o problema
+                        break;
 
                     case 4:
                         int id = Integer.parseInt(JOptionPane.showInputDialog("digite o Id do produto: "));
                         BigDecimal valor = BigDecimal.valueOf(Long.parseLong(JOptionPane.showInputDialog("Digite o novo valor: ")));
                         estoque.MudarValorProduto(id, valor);
-                        break; // Adicionei o break para corrigir o problema
+                        break;
 
                     case 5:
                         estoque.transacoes();
@@ -169,7 +171,7 @@ public class Program {
                             default:
                                 JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                         }
-                        break; // Adicionei o break para corrigir o problema
+                        break;
 
                     case 7:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");

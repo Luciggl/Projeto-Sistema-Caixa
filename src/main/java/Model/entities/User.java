@@ -20,11 +20,7 @@ public class User {
     public String getNome() {
         return nome;
     }
-
-    public void setNome(String nome) {
-        this.nome = nome;
-    }
-
+    
     public String getLogin() {
         return login;
     }
@@ -36,10 +32,7 @@ public class User {
     public FunctionUser getFunction() {
         return function;
     }
-
-    public void setFunction(FunctionUser function) {
-        this.function = function;
-    }
+    
 
     @Override
     public boolean equals(Object o) {

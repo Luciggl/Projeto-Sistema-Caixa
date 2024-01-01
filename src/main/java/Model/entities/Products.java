@@ -8,7 +8,7 @@ import java.util.Objects;
 
 public class Products implements Serializable {
     private int id;
-    private String name;
+    private final String name;
     private String manufacturer;
     private Category category;
     private BigDecimal value;

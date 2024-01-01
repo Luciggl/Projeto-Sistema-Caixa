@@ -6,6 +6,7 @@ import Model.enums.Category;
 import Model.enums.FunctionUser;
 import Model.exceptions.ProdutoJaExisteException;
 import Model.exceptions.ProdutoNaoExisteException;
+import Model.exceptions.UserExceptions;
 import Model.repositories.Path;
 import Model.services.Caixa;
 import Model.services.Estoque;
@@ -21,7 +22,7 @@ import static Model.services.PaymentsServices.ValidadorCartaoCredito.validarNume
 
 public class Program {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws UserExceptions {
         Estoque estoque = new Estoque();
         Caixa caixa = new Caixa(estoque);
         LoginServices loginServices = new LoginServices();
@@ -70,7 +71,7 @@ public class Program {
 
     }
 
-    private static void criarPrimeiroUsuario(LoginServices loginServices) {
+    private static void criarPrimeiroUsuario(LoginServices loginServices) throws UserExceptions{
         JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
         JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
         String nome = JOptionPane.showInputDialog("nome do funcionario");
@@ -90,8 +91,7 @@ public class Program {
         }
     }
 
-
-    private static void removerUsuario(LoginServices loginServices) {
+    private static void removerUsuario(LoginServices loginServices) throws UserExceptions {
         String login = JOptionPane.showInputDialog("Digite o login do funcionario que deseja remover");
         User user = loginServices.findByLogin(login);
         try {
@@ -103,18 +103,23 @@ public class Program {
         }
     }
 
-    private static void criarUsuario(LoginServices loginServices) {
+    private static void criarUsuario(LoginServices loginServices) throws UserExceptions{
         String nome = JOptionPane.showInputDialog("nome do funcionario");
-        String login = JOptionPane.showInputDialog("login do funcionario");
-        String senha = JOptionPane.showInputDialog("senha do funcionario");
-        FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
         try {
-            loginServices.adicionarUsuario(new User(nome, login, senha, function));
-            JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
-        } catch (HeadlessException e) {
+            if (verificarSeEstaVazioNull(nome)) {
+                String login = JOptionPane.showInputDialog("login do funcionario");
+                if (verificarSeEstaVazioNull(login)) {
+                    String senha = JOptionPane.showInputDialog("senha do funcionario");
+                    if (verificarSeEstaVazioNull(senha)) {
+                        FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
+                        loginServices.adicionarUsuario(new User(nome, login, senha, function));
+                        JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+                    } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
+            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
+        } catch (RuntimeException e) {
             throw new RuntimeException(e);
         }
-
     }
 
     private static void menuGerente(Estoque estoque, Caixa caixa) {
@@ -537,6 +542,6 @@ public class Program {
     }
 
     private static boolean verificarSeEstaVazioNull(String validar) {
-        return validar != null && validar.isEmpty();
+        return validar != null && !validar.isEmpty();
     }
 }

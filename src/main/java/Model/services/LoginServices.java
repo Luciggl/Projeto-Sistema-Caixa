@@ -2,9 +2,9 @@ package Model.services;
 
 import Model.entities.User;
 import Model.enums.FunctionUser;
+import Model.exceptions.UserExceptions;
 import Model.repositories.Path;
 
-import javax.swing.*;
 import java.io.*;
 import java.util.ArrayList;
 
@@ -13,59 +13,49 @@ public class LoginServices {
     private ArrayList<User> users = new ArrayList<>();
 
 
-    public boolean ListaDeUserEstaVazia(){
+    public boolean ListaDeUserEstaVazia() {
         return users.isEmpty();
     }
 
 
-    public void adicionarUsuario(User user) {
+    public void adicionarUsuario(User user) throws UserExceptions {
         if (!usuarioExiste(user)) {
             users.add(user);
             SalvarUsuarios(Path.pathUsers);
-        } else System.out.println("Usuario ja cadastrado");
+        } throw new UserExceptions("Usuario ja cadastrado");
 
     }
 
     public void removerUsuario(User user) {
-        if (usuarioExiste(user)){
+        if (usuarioExiste(user)) {
             users.remove(user);
             SalvarUsuarios(Path.pathUsers);
         }
     }
 
-    public User findByLogin(String login) {
+    public User findByLogin(String login) throws  UserExceptions{
         for (User u : users)
             if (u.getLogin().equals(login)) {
                 return u;
-            } else JOptionPane.showMessageDialog(null, "Usuario não encontrado");
-        return null;
+            }
+        throw new UserExceptions("Usuario Não Existe No Sistema");
     }
 
     public boolean usuarioExiste(User user) {
         return users.contains(user);
     }
 
-    public boolean ExisteGerente() {
-        for (User u : users) {
-            if (u.getFunction().equals(FunctionUser.GERENTE)) {
-                return true;
+
+    public int logar(String login, String senha) throws UserExceptions {
+        User user = findByLogin(login);
+        if (user != null) {
+            if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
+                if (user.getFunction().equals(FunctionUser.GERENTE)) return 1;
+                else if (user.getFunction().equals(FunctionUser.CAIXA)) return 2;
+                else if (user.getFunction().equals(FunctionUser.ESTOQUISTA)) return 3;
             }
         }
-        return false;
-    }
-
-
-    public int logar(String login, String senha) {
-            User user = findByLogin(login);
-            if (user != null) {
-                if (user.getLogin().equals(login) && user.getSenha().equals(senha)) {
-                    if (user.getFunction().equals(FunctionUser.GERENTE)) return 1;
-                    else if (user.getFunction().equals(FunctionUser.CAIXA)) return 2;
-                    else if (user.getFunction().equals(FunctionUser.ESTOQUISTA)) return 3;
-                }
-            } else System.out.println("login não efetuado\n Verifique se Login ou senha");
-
-        return 0;
+        throw new UserExceptions("Login ou senha inválidos");
     }
 
     public void SalvarUsuarios(String path) {

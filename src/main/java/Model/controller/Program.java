@@ -1,5 +1,6 @@
 package Model.controller;
 
+import Model.entities.Movimentacao;
 import Model.entities.Products;
 import Model.entities.User;
 import Model.enums.Category;
@@ -7,29 +8,36 @@ import Model.enums.FunctionUser;
 import Model.exceptions.ProdutoException;
 import Model.exceptions.UserExceptions;
 import Model.repositories.Path;
-import Model.services.Caixa;
-import Model.services.Estoque;
-import Model.services.LoginServices;
-import Model.services.PaymentsServices;
+import Model.repositories.TaxPayments;
+import Model.services.*;
 
 import javax.swing.*;
 import java.awt.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Date;
 
-import static Model.services.PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao;
+/*
+    Falta fazer:
+    #Fazer a logica pra gerenciar a movimentação de dinheiro
+    #fazer a interface grafica
+*/
+
 
 public class Program {
 
     public static void main(String[] args) throws UserExceptions {
+        PaymentsServices paymentsServices = new PaymentsServices();
         Estoque estoque = new Estoque();
         Caixa caixa = new Caixa(estoque);
         LoginServices loginServices = new LoginServices();
-
+        Movimentacao movimentacao = new Movimentacao();
+        MovimentacaoServices movimentacaoServices = new MovimentacaoServices();
 
         estoque.carregarEstoque(Path.pathEstoque);
         estoque.carregarTransacao(Path.pathTransacao);
         loginServices.CarregarUsuarios(Path.pathUsers);
+        movimentacaoServices.carregarMovimentacao(Path.pathMovimentacao);
 
         if (!loginServices.ListaDeUserEstaVazia()) {
             try {
@@ -46,11 +54,11 @@ public class Program {
 
                 switch (papel) {
                     case 1:
-                        menuGerente(estoque, caixa, loginServices);
+                        menuGerente(estoque, caixa, loginServices, paymentsServices, movimentacaoServices);
                         break;
 
                     case 2:
-                        menuCaixa(caixa);
+                        menuCaixa(caixa, paymentsServices, movimentacao, movimentacaoServices);
                         break;
 
                     case 3:
@@ -123,11 +131,11 @@ public class Program {
         }
     }
 
-    private static void menuGerente(Estoque estoque, Caixa caixa, LoginServices loginServices) {
+    private static void menuGerente(Estoque estoque, Caixa caixa, LoginServices loginServices, PaymentsServices paymentsServices, MovimentacaoServices movimentacaoServices) {
         try {
             int option;
             do {
-                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Criar Usuario\n2 - Remover Usuario\n3 - Verificar Estoque\n4 - Alterar valor Produto\n5 - transações\n6 - Buscar Transações\n7 - Sair");
+                String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Criar Usuario\n2 - Remover Usuario\n3 - Verificar Estoque\n4 - Alterar valor Produto\n5 - transações\n6 - Buscar Transações\n7 - Movimentações \n8 - Sair");
                 if (input == null || input.isEmpty()) {
                     option = 7;
                 } else {
@@ -174,6 +182,9 @@ public class Program {
                         break;
 
                     case 7:
+                        JOptionPane.showMessageDialog(null, movimentacaoServices.getMovimentacaos());
+
+                    case 8:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque(Path.pathEstoque);
                         estoque.salvarTransacao(Path.pathTransacao);
@@ -182,14 +193,14 @@ public class Program {
                     default:
                         JOptionPane.showMessageDialog(null, "Opção inválida. Tente novamente.");
                 }
-            } while (option != 7);
+            } while (option != 8);
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
         }
     }
 
-    private static void menuCaixa(Caixa caixa) {
+    private static void menuCaixa(Caixa caixa, PaymentsServices services, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices) {
         try {
             int option;
             do {
@@ -203,11 +214,16 @@ public class Program {
 
                 switch (option) {
                     case 1:
-                        realizarCompra(caixa);
+                        realizarCompra(caixa, services, movimentacao);
                         break;
 
                     case 2:
                         JOptionPane.showMessageDialog(null, "Saindo do caixa.");
+                        if (movimentacao.VerificarSeOuveMovimentacao()){
+                            movimentacao.BalancoCaixaDiario(new Date());
+                            movimentacaoServices.addMovimentacao(movimentacao);
+                            movimentacaoServices.SalvarMovimentacao(Path.pathMovimentacao);
+                        } else System.out.println("Não ouve movimentações");
                         break;
 
                     default:
@@ -436,9 +452,8 @@ public class Program {
         }
     }
 
-    private static void realizarCompra(Caixa caixa) {
+    private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao) {
         ArrayList<String> listaCompra = new ArrayList<>();
-
         int option;
         BigDecimal valorTotalCompra = BigDecimal.ZERO;
 
@@ -452,7 +467,6 @@ public class Program {
                         caixa.adicionarProduto(produtoComprado, quantidadeComprada);
 
                         BigDecimal valorTotalProduto = produtoComprado.getValue().multiply(BigDecimal.valueOf(quantidadeComprada));
-
                         listaCompra.add(produtoComprado.getName() + " \n" + quantidadeComprada + " - R$: " +
                                 produtoComprado.getValue() + " - Total R$:" + valorTotalProduto);
                         valorTotalCompra = valorTotalCompra.add(valorTotalProduto);
@@ -482,28 +496,14 @@ public class Program {
                 break;
             }
 
-            String[] opcoesCompra = {"Adicionar Produto", "Remover Produto"};
-            int opcaoCompra = JOptionPane.showOptionDialog(
-                    null,
-                    "Escolha uma opção:",
-                    "Adicionar ou Remover Produto",
-                    JOptionPane.DEFAULT_OPTION,
-                    JOptionPane.QUESTION_MESSAGE,
-                    null,
-                    opcoesCompra,
-                    opcoesCompra[0]
-            );
-
-            if (opcaoCompra == 1) {
-                Products produtoRemover = escolherProduto(caixa.getEstoque());
-                int quantidadeRemover = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser removida:"));
-                caixa.removerProduto(produtoRemover, quantidadeRemover);
-                break;
-            }
         } while (true);
 
-        PaymentsServices paymentsServices = new PaymentsServices();
 
+        processarPagamento(listaCompra, valorTotalCompra, paymentsServices, caixa, movimentacao);
+    }
+
+    private static void processarPagamento(ArrayList<String> listaCompra, BigDecimal valorTotalCompra,
+                                           PaymentsServices paymentsServices, Caixa caixa, Movimentacao movimentacao) {
         int payments = Integer.parseInt(JOptionPane.showInputDialog(null,
                 "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
 
@@ -512,27 +512,30 @@ public class Program {
                 String ValorPix = paymentsServices.pagamentoPix(valorTotalCompra);
                 listaCompra.add(ValorPix);
                 caixa.finalizarCompra();
+                movimentacao.adicionarValorDiarioPix(valorTotalCompra.subtract(valorTotalCompra.multiply(TaxPayments.taxPix)));
                 JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (validarNumeroCartao(Card)) {
+                if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(Card)) {
                     listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra));
                     caixa.finalizarCompra();
+                    movimentacao.adicionarValorDiarioCredito(valorTotalCompra.add(valorTotalCompra.multiply(TaxPayments.taxCredito)));
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
+                    JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
                 break;
 
             case 3:
                 String CardDeb = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (validarNumeroCartao(CardDeb)) {
+                if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(CardDeb)) {
                     listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra));
                     caixa.finalizarCompra();
+                    movimentacao.adicionarValorDiarioDebito(valorTotalCompra);
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Cartão Invalido\nCompra Nâo concluida");
+                    JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
                 break;
             case 4:
@@ -541,15 +544,17 @@ public class Program {
                 if (ValorRecebido.compareTo(valorTotalCompra) >= 0) {
                     listaCompra.add(paymentsServices.pagamentoDinheiro(valorTotalCompra, ValorRecebido));
                     caixa.finalizarCompra();
+                    movimentacao.adicionarValorDiarioDinheiro(valorTotalCompra);
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
                 } else {
-                    JOptionPane.showMessageDialog(null, "Valor insuficiente para efetuar o Pagamento\nCompra Nâo concluida");
+                    JOptionPane.showMessageDialog(null, "Valor insuficiente para efetuar o Pagamento\nCompra Não concluída");
                 }
                 break;
             default:
-                JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento valida");
+                JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento válida");
         }
     }
+
 
     private static boolean verificarSeEstaVazioNull(String validar) {
         return validar != null && !validar.isEmpty();

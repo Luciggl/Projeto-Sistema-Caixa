@@ -1,2 +1,2 @@
 Lucielio,luci,123,GERENTE
-junior,jr,2,ESTOQUISTA
+junior,jr,2,CAIXA

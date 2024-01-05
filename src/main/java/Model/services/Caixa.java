@@ -33,7 +33,9 @@ public class Caixa {
         if (produtoExisteNoEstoque(produto, quantidade)) {
             produtosCompra.put(produto, quantidade);
             JOptionPane.showMessageDialog(null, String.format(PRODUTO_ADICIONADO_MSG, produto.getName(), quantidade));
-        } throw new ProdutoException("O Produto Não foi encontrado");
+        } else {
+            throw new ProdutoException("O Produto Não foi encontrado");
+        }
     }
 
     public void removerProduto(Products produto, int quantidade) throws ProdutoException{
@@ -44,7 +46,9 @@ public class Caixa {
                 produtosCompra.put(produto, quantidadeAtual - quantidade);
                 JOptionPane.showMessageDialog(null, "Produto removido da lista de compra: " +
                         produto.getName() + " | Quantidade removida: " + quantidade);
-            } throw new ProdutoException("Erro ao remover produto: Quantidade superior à quantidade na lista de compra");
+            } else {
+                throw new ProdutoException("Erro ao remover produto: Quantidade superior à quantidade na lista de compra");
+            }
 
         } else {
             JOptionPane.showMessageDialog(null, "Erro ao remover produto: Produto não encontrado na lista de compra");

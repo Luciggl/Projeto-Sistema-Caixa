@@ -67,3 +67,9 @@ Saida,arroz catua,1,sex. jan. 05 00:00:09 BRT 2024
 Saida,macarrão parafuso,10,sex. jan. 05 00:00:21 BRT 2024
 Saida,arroz catua,1,sex. jan. 05 00:02:15 BRT 2024
 Saida,arroz catua,1,sex. jan. 05 00:39:03 BRT 2024
+Saida,arroz catua,1,sáb. jan. 06 23:20:12 BRT 2024
+Saida,macarrão parafuso,1,sáb. jan. 06 23:21:23 BRT 2024
+Saida,arroz catua,1,sáb. jan. 06 23:23:56 BRT 2024
+Saida,macarrão parafuso,1,sáb. jan. 06 23:24:32 BRT 2024
+Saida,arroz catua,1,sáb. jan. 06 23:28:22 BRT 2024
+Saida,macarrão parafuso,1,sáb. jan. 06 23:31:46 BRT 2024

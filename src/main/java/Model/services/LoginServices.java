@@ -12,7 +12,6 @@ public class LoginServices {
 
     private ArrayList<User> users = new ArrayList<>();
 
-
     public boolean ListaDeUserEstaVazia() {
         return users.isEmpty();
     }
@@ -45,7 +44,10 @@ public class LoginServices {
         return users.contains(user);
     }
 
+    public String retornarNomeFuncionario(String login) throws UserExceptions {
+        return findByLogin(login).getNome();
 
+    }
     public int logar(String login, String senha) throws UserExceptions {
         User user = findByLogin(login);
         if (user != null) {

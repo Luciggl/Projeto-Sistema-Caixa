@@ -54,11 +54,11 @@ public class MovimentacaoServices {
                     BigDecimal dinheiro = new BigDecimal(parts[4].replace(",", "."));
                     String fechamento = parts[5];
 
-                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", Locale.ENGLISH);
+                    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", new Locale("pt", "BR"));
 
                     try {
-                        Date dateAbertura = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", new Locale("pt", "BR")).parse(Abertura);
-                        Date dataFechamento = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy", new Locale("pt", "BR")).parse(fechamento);
+                        Date dateAbertura = dateFormat.parse(Abertura);
+                        Date dataFechamento = dateFormat.parse(fechamento);
 
                         Movimentacao services = new Movimentacao(dateAbertura, Pix, credito, debito, dinheiro, dataFechamento);
                         movimentacaos.add(services);

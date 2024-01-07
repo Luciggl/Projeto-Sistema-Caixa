@@ -19,7 +19,6 @@ import java.util.Date;
 
 /*
     Falta fazer:
-    #Fazer a logica pra gerenciar a movimentação de dinheiro
     #fazer a interface grafica
 */
 
@@ -27,6 +26,8 @@ import java.util.Date;
 public class Program {
 
     public static void main(String[] args) throws UserExceptions {
+        String login, senha;
+
         PaymentsServices paymentsServices = new PaymentsServices();
         Estoque estoque = new Estoque();
         Caixa caixa = new Caixa(estoque);
@@ -41,34 +42,38 @@ public class Program {
 
         if (!loginServices.ListaDeUserEstaVazia()) {
             try {
-                String login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
-                String senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
+                login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
+                JOptionPane.showMessageDialog(null, login);
+                if (verificarSeNaoEstaVazioNull(login)) {
+                    senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
+                    if (verificarSeNaoEstaVazioNull(senha)) {
+                        int papel = loginServices.logar(login, senha);
 
+                        switch (papel) {
+                            case 1:
+                                menuGerente(estoque, loginServices, movimentacaoServices);
+                                break;
 
-                if (login == null || login.isEmpty() || senha == null || senha.isEmpty()) {
-                    JOptionPane.showMessageDialog(null, "Saindo do programa.");
+                            case 2:
+                                String nomeFuncionario = loginServices.retornarNomeFuncionario(login);
+                                menuCaixa(caixa, paymentsServices, movimentacao, movimentacaoServices, nomeFuncionario);
+                                break;
+
+                            case 3:
+                                menuEstoquista(estoque);
+                                break;
+
+                            default:
+                                JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "SENHA não pode esta vazio ou Nulo!!\nSaindo do programa.");
+                        System.exit(0);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "lOGIN não pode esta vazio ou Nulo!!\nSaindo do programa.");
                     System.exit(0);
                 }
-
-                int papel = loginServices.logar(login, senha);
-
-                switch (papel) {
-                    case 1:
-                        menuGerente(estoque, caixa, loginServices, paymentsServices, movimentacaoServices);
-                        break;
-
-                    case 2:
-                        menuCaixa(caixa, paymentsServices, movimentacao, movimentacaoServices);
-                        break;
-
-                    case 3:
-                        menuEstoquista(estoque);
-                        break;
-
-                    default:
-                        JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
-                }
-
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
             }
@@ -83,11 +88,11 @@ public class Program {
         JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
         String nome = JOptionPane.showInputDialog("nome do funcionario");
         try {
-            if (verificarSeEstaVazioNull(nome)) {
+            if (verificarSeNaoEstaVazioNull(nome)) {
                 String login = JOptionPane.showInputDialog("login do funcionario");
-                if (verificarSeEstaVazioNull(login)) {
+                if (verificarSeNaoEstaVazioNull(login)) {
                     String senha = JOptionPane.showInputDialog("senha do funcionario");
-                    if (verificarSeEstaVazioNull(senha)) {
+                    if (verificarSeNaoEstaVazioNull(senha)) {
                         loginServices.adicionarUsuario(new User(nome, login, senha, FunctionUser.GERENTE));
                         JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
                     } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
@@ -113,12 +118,12 @@ public class Program {
     private static void criarUsuario(LoginServices loginServices) throws UserExceptions {
         String nome = JOptionPane.showInputDialog("nome do funcionario");
         try {
-            if (verificarSeEstaVazioNull(nome)) {
+            if (verificarSeNaoEstaVazioNull(nome)) {
                 String login = JOptionPane.showInputDialog("login do funcionario");
-                if (verificarSeEstaVazioNull(login)) {
+                if (verificarSeNaoEstaVazioNull(login)) {
                     if (!loginServices.usuarioExiste(loginServices.findByLogin(login))) {
                         String senha = JOptionPane.showInputDialog("senha do funcionario");
-                        if (verificarSeEstaVazioNull(senha)) {
+                        if (verificarSeNaoEstaVazioNull(senha)) {
                             FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
                             loginServices.adicionarUsuario(new User(nome, login, senha, function));
                             JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
@@ -131,7 +136,8 @@ public class Program {
         }
     }
 
-    private static void menuGerente(Estoque estoque, Caixa caixa, LoginServices loginServices, PaymentsServices paymentsServices, MovimentacaoServices movimentacaoServices) {
+    private static void menuGerente(Estoque estoque, LoginServices loginServices, MovimentacaoServices
+            movimentacaoServices) {
         try {
             int option;
             do {
@@ -200,7 +206,8 @@ public class Program {
         }
     }
 
-    private static void menuCaixa(Caixa caixa, PaymentsServices services, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices) {
+    private static void menuCaixa(Caixa caixa, PaymentsServices services, Movimentacao
+            movimentacao, MovimentacaoServices movimentacaoServices, String nomeFuncionario) {
         try {
             int option;
             do {
@@ -214,12 +221,12 @@ public class Program {
 
                 switch (option) {
                     case 1:
-                        realizarCompra(caixa, services, movimentacao);
+                        realizarCompra(caixa, services, movimentacao, nomeFuncionario);
                         break;
 
                     case 2:
                         JOptionPane.showMessageDialog(null, "Saindo do caixa.");
-                        if (movimentacao.VerificarSeOuveMovimentacao()){
+                        if (movimentacao.VerificarSeOuveMovimentacao()) {
                             movimentacao.BalancoCaixaDiario(new Date());
                             movimentacaoServices.addMovimentacao(movimentacao);
                             movimentacaoServices.SalvarMovimentacao(Path.pathMovimentacao);
@@ -452,7 +459,7 @@ public class Program {
         }
     }
 
-    private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao) {
+    private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao, String nomeFuncionario) {
         ArrayList<String> listaCompra = new ArrayList<>();
         int option;
         BigDecimal valorTotalCompra = BigDecimal.ZERO;
@@ -499,29 +506,29 @@ public class Program {
         } while (true);
 
 
-        processarPagamento(listaCompra, valorTotalCompra, paymentsServices, caixa, movimentacao);
+        processarPagamento(listaCompra, valorTotalCompra, paymentsServices, caixa, movimentacao, nomeFuncionario);
     }
 
     private static void processarPagamento(ArrayList<String> listaCompra, BigDecimal valorTotalCompra,
-                                           PaymentsServices paymentsServices, Caixa caixa, Movimentacao movimentacao) {
+                                           PaymentsServices paymentsServices, Caixa caixa, Movimentacao movimentacao, String nomeFuncionario) {
         int payments = Integer.parseInt(JOptionPane.showInputDialog(null,
                 "Digite a forma de pagamento: \n1 - PIX \n2 - Credito\n3 - Debito\n4 - Dinheiro\nTotal R$: " + valorTotalCompra));
 
         switch (payments) {
             case 1:
-                String ValorPix = paymentsServices.pagamentoPix(valorTotalCompra);
+                String ValorPix = paymentsServices.pagamentoPix(valorTotalCompra, nomeFuncionario);
                 listaCompra.add(ValorPix);
                 caixa.finalizarCompra();
                 movimentacao.adicionarValorDiarioPix(valorTotalCompra.subtract(valorTotalCompra.multiply(TaxPayments.taxPix)));
-                JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra)+ "\n");
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
                 if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(Card)) {
-                    listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra));
+                    listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioCredito(valorTotalCompra.add(valorTotalCompra.multiply(TaxPayments.taxCredito)));
-                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra)+ "\n");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
@@ -530,10 +537,10 @@ public class Program {
             case 3:
                 String CardDeb = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
                 if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(CardDeb)) {
-                    listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra));
+                    listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioDebito(valorTotalCompra);
-                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
+                    JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra)+ "\n");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
@@ -542,7 +549,7 @@ public class Program {
                 BigDecimal ValorRecebido = new BigDecimal(JOptionPane.showInputDialog(null,
                         "Valor Total R$: " + valorTotalCompra + "\nValor recebido R$: "));
                 if (ValorRecebido.compareTo(valorTotalCompra) >= 0) {
-                    listaCompra.add(paymentsServices.pagamentoDinheiro(valorTotalCompra, ValorRecebido));
+                    listaCompra.add(paymentsServices.pagamentoDinheiro(valorTotalCompra, ValorRecebido, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioDinheiro(valorTotalCompra);
                     JOptionPane.showMessageDialog(null, "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n");
@@ -556,7 +563,7 @@ public class Program {
     }
 
 
-    private static boolean verificarSeEstaVazioNull(String validar) {
+    private static boolean verificarSeNaoEstaVazioNull(String validar) {
         return validar != null && !validar.isEmpty();
     }
 }

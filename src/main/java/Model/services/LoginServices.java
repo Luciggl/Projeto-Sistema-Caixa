@@ -33,11 +33,21 @@ public class LoginServices {
     }
 
     public User findByLogin(String login) throws  UserExceptions{
-        for (User u : users)
+        for (User u : users){
             if (u.getLogin().equals(login)) {
                 return u;
             }
+        }
         throw new UserExceptions("Usuario Não Existe No Sistema");
+    }
+
+    public boolean loginNaoExiste(String login){
+        for(User u : users){
+            if(u.getLogin().equals(login)){
+                return false;
+            }
+        }
+        return true;
     }
 
     public boolean usuarioExiste(User user) {
@@ -86,13 +96,12 @@ public class LoginServices {
                     try {
                         User user = new User(nome, login, senha, functionUser);
                         users.add(user);
-                        System.out.println("Usuarios carregados com sucesso");
                     } catch (Exception e) {
                         throw new RuntimeException(e);
                     }
 
                 }
-            }
+            } System.out.println("Usuarios carregados com sucesso");
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

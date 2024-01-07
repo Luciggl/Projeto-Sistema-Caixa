@@ -63,9 +63,7 @@ public class Estoque implements Model.repositories.Estoque {
     public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoException{
         Products products1 = getProductById(id);
         if (produtoExiste(products1)){
-            for(Products p : productsEstoque){
                 products1.setValue(novoValor);
-            }
         } else {
             throw new ProdutoException("Error: Produto não existe no estoque");
         }
@@ -171,7 +169,7 @@ public class Estoque implements Model.repositories.Estoque {
                     productsEstoque.add(product);
                 }
             }
-            System.out.println("Estoque carregado com sucesso do arquivo: " + filePath + "\n");
+            System.out.println("Estoque carregado com sucesso!!\n");
         } catch (IOException e) {
             System.out.println("Estoque Vazio");
         }
@@ -195,7 +193,7 @@ public class Estoque implements Model.repositories.Estoque {
     }
 
     public BigDecimal calcularValorTotalEstoque() {
-        BigDecimal valorTotal = null;
+        BigDecimal valorTotal = BigDecimal.ZERO;
 
         for (Products product : productsEstoque) {
             valorTotal.add(product.getValue().multiply(BigDecimal.valueOf(product.getQuanti())));

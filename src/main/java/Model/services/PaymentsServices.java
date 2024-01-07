@@ -1,6 +1,5 @@
 package Model.services;
 
-import Model.entities.Movimentacao;
 import Model.repositories.TaxPayments;
 
 import javax.swing.*;
@@ -10,8 +9,6 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PaymentsServices {
-
-    private Movimentacao service = new Movimentacao();
     Date aberturaCaixa = new Date();
     Date dateFinal = new Date();
 

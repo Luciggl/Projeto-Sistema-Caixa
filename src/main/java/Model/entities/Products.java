@@ -75,6 +75,6 @@ public class Products implements Serializable {
 
     @Override
     public String toString() {
-        return name + " Qnt: " + quanti + " R$:" + value + " Id: " + id + "\n" + "---------------------------------\n";
+        return "\n" + name + " Qnt: " + quanti + " R$:" + value + " Id: " + id + "\n" + "---------------------------------------------------------------------------------\n";
     }
 }

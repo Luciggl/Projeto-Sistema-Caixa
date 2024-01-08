@@ -52,7 +52,6 @@ public class BalancoServices {
                 writer.write(balanco.getTipo() + "," + balanco.getProdutos().getName() + "," + balanco.getQuant() + "," + dateFormat.format(balanco.getDate()));
                 writer.newLine();
             }
-            System.out.print("Transações salvas com sucesso!!! \n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -81,7 +80,6 @@ public class BalancoServices {
                     }
                 }
             }
-            System.out.println("Transações recuperadas com sucesso!!!\n");
         } catch (IOException e) {
             e.printStackTrace();
         }

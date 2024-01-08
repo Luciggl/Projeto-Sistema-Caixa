@@ -1,6 +1,0 @@
-Entrada,Arroz,100,dom. jan. 07 22:09:53 BRT 2024
-Entrada,macarrão,100,dom. jan. 07 22:10:34 BRT 2024
-Saida,Arroz,3,dom. jan. 07 22:11:26 BRT 2024
-Saida,macarrão,3,dom. jan. 07 22:11:26 BRT 2024
-Saida,Arroz,1,dom. jan. 07 22:12:23 BRT 2024
-Saida,Arroz,1,dom. jan. 07 22:27:29 BRT 2024

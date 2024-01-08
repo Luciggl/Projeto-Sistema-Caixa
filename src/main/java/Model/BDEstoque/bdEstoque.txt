@@ -1,2 +1,0 @@
-100,Arroz,luciLTA,ALIMENTO,7.0,95
-101,macarrão,LuciLTA,ALIMENTO,4.5,97

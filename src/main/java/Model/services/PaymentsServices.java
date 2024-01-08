@@ -9,20 +9,21 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PaymentsServices {
-    Date aberturaCaixa = new Date();
-    Date dateFinal = new Date();
-
-    SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
-    String DataFimCompra = formato.format(dateFinal);
+    Date dateFinal;
     String formaPagamento;
+    SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
 
     public String pagamentoPix(BigDecimal valor, String nome) {
+        dateFinal = new Date();
+        String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
         formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: PIX\nValor Total R$:" + formatarValor(valor) + "\nDesconto R$: " + formatarValor(CalcularTaxPix(valor)) + "\nTaxa Cartão:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor.subtract(CalcularTaxPix(valor))) + "\nTroco R$:" + BigDecimal.ZERO;
         return formaPagamento;
     }
 
     public String pagamentoCredito(BigDecimal valor, String nome) {
+        dateFinal = new Date();
+        String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
         BigDecimal desconto = BigDecimal.ZERO;
         BigDecimal taxaCartao = CalcularTaxCredito(valor);
@@ -33,12 +34,16 @@ public class PaymentsServices {
     }
 
     public String pagamentoDebito(BigDecimal valor, String nome) {
+        dateFinal = new Date();
+        String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
         formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: DEBITO\nValor Total R$:" + formatarValor(valor) + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + BigDecimal.ZERO;
         return formaPagamento;
     }
 
     public String pagamentoDinheiro(BigDecimal valor, BigDecimal valorRecebido, String nome) {
+        dateFinal = new Date();
+        String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
         formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: DINHEIRO\nValor recebido R$:" + formatarValor(valorRecebido) + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + formatarValor(CalcularTroco(valor, valorRecebido));
         return formaPagamento;

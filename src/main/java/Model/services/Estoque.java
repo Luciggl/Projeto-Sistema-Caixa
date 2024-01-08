@@ -143,7 +143,6 @@ public class Estoque implements Model.repositories.Estoque {
                 writer.newLine();
             }
 
-            System.out.println("Estoque salvo com sucesso no arquivo: " + filePath + "\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -169,7 +168,6 @@ public class Estoque implements Model.repositories.Estoque {
                     productsEstoque.add(product);
                 }
             }
-            System.out.println("Estoque carregado com sucesso!!\n");
         } catch (IOException e) {
             System.out.println("Estoque Vazio");
         }

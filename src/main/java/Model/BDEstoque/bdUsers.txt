@@ -1,4 +1,2 @@
-lucielio,luci,123,GERENTE
-lucielio,luci,123,GERENTE
-junior,jr,1,CAIXA
-pedro,p,2,ESTOQUISTA
+Luciélio,luci,123,GERENTE
+pedro,123,123,CAIXA

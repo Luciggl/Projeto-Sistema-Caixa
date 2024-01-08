@@ -71,11 +71,10 @@ public class LoginServices {
     }
 
     public void SalvarUsuarios(String path) {
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path))) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(path, false))) {
             for (User u : users) {
                 bw.write(u.getNome() + "," + u.getLogin() + "," + u.getSenha() + "," + u.getFunction());
                 bw.newLine();
-                System.out.print("Salvo com sucesso");
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -101,7 +100,7 @@ public class LoginServices {
                     }
 
                 }
-            } System.out.println("Usuarios carregados com sucesso!!");
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

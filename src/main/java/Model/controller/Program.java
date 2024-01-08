@@ -41,6 +41,7 @@ public class Program {
         movimentacaoServices.carregarMovimentacao(Path.pathMovimentacao);
 
         if (!loginServices.ListaDeUserEstaVazia()) {
+            JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
             try {
                 mostrarTelaLogin(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
             } catch (Exception e) {
@@ -162,6 +163,7 @@ public class Program {
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
                         estoque.salvarEstoque(Path.pathEstoque);
                         estoque.salvarTransacao(Path.pathTransacao);
+                        loginServices.SalvarUsuarios(Path.pathUsers);
                         break;
 
                     default:
@@ -432,7 +434,6 @@ public class Program {
     }
 
     private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao, String nomeFuncionario) {
-        movimentacao.setAberturaCaixa(new Date());
         ArrayList<String> listaCompra = new ArrayList<>();
         int option;
         BigDecimal valorTotalCompra = BigDecimal.ZERO;
@@ -537,9 +538,6 @@ public class Program {
 
     private static void mostrarTelaLogin(LoginServices loginServices, Estoque estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
         String login, senha;
-
-        loginServices.CarregarUsuarios(Path.pathUsers);
-
         do {
             login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
             if (verificarSeNaoEstaVazioNull(login)) {

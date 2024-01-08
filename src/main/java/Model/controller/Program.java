@@ -42,42 +42,13 @@ public class Program {
 
         if (!loginServices.ListaDeUserEstaVazia()) {
             try {
-                login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
-                if (verificarSeNaoEstaVazioNull(login)) {
-                    senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
-                    if (verificarSeNaoEstaVazioNull(senha)) {
-                        int papel = loginServices.logar(login, senha);
-
-                        switch (papel) {
-                            case 1:
-                                menuGerente(estoque, loginServices, movimentacaoServices);
-                                break;
-
-                            case 2:
-                                String nomeFuncionario = loginServices.retornarNomeFuncionario(login);
-                                menuCaixa(caixa, paymentsServices, movimentacao, movimentacaoServices, nomeFuncionario);
-                                break;
-
-                            case 3:
-                                menuEstoquista(estoque);
-                                break;
-
-                            default:
-                                JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "SENHA não pode esta vazio ou Nulo!!\nSaindo do programa.");
-                        System.exit(0);
-                    }
-                } else {
-                    JOptionPane.showMessageDialog(null, "lOGIN não pode esta vazio ou Nulo!!\nSaindo do programa.");
-                    System.exit(0);
-                }
+                mostrarTelaLogin(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
             }
         } else {
             criarPrimeiroUsuario(loginServices);
+            mostrarTelaLogin(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
         }
 
     }
@@ -185,7 +156,7 @@ public class Program {
                         break;
 
                     case 7:
-                        JOptionPane.showMessageDialog(null, movimentacaoServices.getMovimentacaos());
+                        mostrarNaTela(String.valueOf(movimentacaoServices.getMovimentacaos()), "MOVIMENTAÇÔES");
 
                     case 8:
                         JOptionPane.showMessageDialog(null, "Saindo do programa.");
@@ -203,12 +174,6 @@ public class Program {
         }
     }
 
-    private static void mostrarNaTela(String msg, String title) {
-        JTextArea textArea = new JTextArea(15, 30);
-        textArea.setText(msg);
-        JScrollPane scrollPane = new JScrollPane(textArea);
-        JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
-    }
 
     private static void menuCaixa(Caixa caixa, PaymentsServices services, Movimentacao
             movimentacao, MovimentacaoServices movimentacaoServices, String nomeFuncionario) {
@@ -325,6 +290,8 @@ public class Program {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: Insira valores válidos.");
         } catch (ProdutoException e) {
             JOptionPane.showMessageDialog(null, "Erro ao adicionar produto: " + e.getMessage());
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -375,10 +342,15 @@ public class Program {
     private static Products escolherProduto(Estoque estoque) {
         try {
             int productId = Integer.parseInt(JOptionPane.showInputDialog("ID do produto a ser escolhido:"));
-            return estoque.getProductById(productId);
+            if (estoque.Idexiste(productId)) {
+                return estoque.getProductById(productId);
+            } else {
+                throw new Exception("Não Existe produto com esse ID");
+            }
         } catch (NumberFormatException e) {
-            JOptionPane.showMessageDialog(null, "Erro ao escolher produto: Insira um ID válido.");
-            return null;
+            throw new ProdutoException("Erro ao escolher produto: Insira um ID válido.");
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -431,7 +403,7 @@ public class Program {
                 for (Products produto : produtosPorCategoria) {
                     mensagem.append(produto).append("\n");
                 }
-                mostrarNaTela(mensagem.toString(),"Produtos encontrados:");
+                mostrarNaTela(mensagem.toString(), "Produtos encontrados:");
             } else {
                 JOptionPane.showMessageDialog(null, "Nenhum produto encontrado na categoria " + category + ".");
             }
@@ -450,7 +422,7 @@ public class Program {
                 for (Products produto : produtosPorFabricante) {
                     mensagem.append(produto).append("\n");
                 }
-                mostrarNaTela(mensagem.toString(),"Produtos encontrados:");
+                mostrarNaTela(mensagem.toString(), "Produtos encontrados:");
             } else {
                 JOptionPane.showMessageDialog(null, "Nenhum produto encontrado do fabricante " + manufacturer + ".");
             }
@@ -460,6 +432,7 @@ public class Program {
     }
 
     private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao, String nomeFuncionario) {
+        movimentacao.setAberturaCaixa(new Date());
         ArrayList<String> listaCompra = new ArrayList<>();
         int option;
         BigDecimal valorTotalCompra = BigDecimal.ZERO;
@@ -520,7 +493,7 @@ public class Program {
                 listaCompra.add(ValorPix);
                 caixa.finalizarCompra();
                 movimentacao.adicionarValorDiarioPix(valorTotalCompra.subtract(valorTotalCompra.multiply(TaxPayments.taxPix)));
-                mostrarNaTela( "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n","NOTA FISCAL");
+                mostrarNaTela("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
@@ -528,7 +501,7 @@ public class Program {
                     listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioCredito(valorTotalCompra.add(valorTotalCompra.multiply(TaxPayments.taxCredito)));
-                    mostrarNaTela( "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n","NOTA FISCAL");
+                    mostrarNaTela("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
@@ -540,7 +513,7 @@ public class Program {
                     listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioDebito(valorTotalCompra);
-                    mostrarNaTela( "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n","NOTA FISCAL");
+                    mostrarNaTela("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
                 } else {
                     JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
                 }
@@ -552,7 +525,7 @@ public class Program {
                     listaCompra.add(paymentsServices.pagamentoDinheiro(valorTotalCompra, ValorRecebido, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioDinheiro(valorTotalCompra);
-                    mostrarNaTela( "Produtos comprados:\n" + String.join("\n", listaCompra) + "\n","NOTA FISCAL");
+                    mostrarNaTela("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
                 } else {
                     JOptionPane.showMessageDialog(null, "Valor insuficiente para efetuar o Pagamento\nCompra Não concluída");
                 }
@@ -562,6 +535,53 @@ public class Program {
         }
     }
 
+    private static void mostrarTelaLogin(LoginServices loginServices, Estoque estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
+        String login, senha;
+
+        loginServices.CarregarUsuarios(Path.pathUsers);
+
+        do {
+            login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
+            if (verificarSeNaoEstaVazioNull(login)) {
+                senha = JOptionPane.showInputDialog("Digite Sua Senha: ");
+                if (verificarSeNaoEstaVazioNull(senha)) {
+                    int papel = loginServices.logar(login, senha);
+
+                    switch (papel) {
+                        case 1:
+                            menuGerente(estoque, loginServices, movimentacaoServices);
+                            break;
+
+                        case 2:
+                            String nomeFuncionario = loginServices.retornarNomeFuncionario(login);
+                            menuCaixa(caixa, paymentsServices, movimentacao, movimentacaoServices, nomeFuncionario);
+                            break;
+
+                        case 3:
+                            menuEstoquista(estoque);
+                            break;
+
+                        default:
+                            JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
+                            System.exit(0);
+                    }
+                } else {
+                    JOptionPane.showMessageDialog(null, "SENHA não pode estar vazia ou Nula!!\nSaindo do programa.");
+                    System.exit(0);
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "LOGIN não pode estar vazio ou Nulo!!\nSaindo do programa.");
+                System.exit(0);
+            }
+        } while (true);
+    }
+
+    private static void mostrarNaTela(String msg, String title) {
+        JTextArea textArea = new JTextArea(15, 30);
+        textArea.setText(msg);
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        JOptionPane.showMessageDialog(null, scrollPane, title, JOptionPane.PLAIN_MESSAGE);
+    }
 
     private static boolean verificarSeNaoEstaVazioNull(String validar) {
         return validar != null && !validar.isEmpty();

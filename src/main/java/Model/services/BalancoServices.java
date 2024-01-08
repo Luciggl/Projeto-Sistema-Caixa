@@ -39,7 +39,10 @@ public class BalancoServices {
     }
 
     public void exibirTransacoes() {
-        JOptionPane.showMessageDialog(null, transacao.toString());
+        JTextArea textArea = new JTextArea(15, 30);
+        textArea.setText(transacao.toString() + "\n");
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        JOptionPane.showMessageDialog(null, scrollPane, "TRANSAÇÔES", JOptionPane.PLAIN_MESSAGE);
 
     }
 
@@ -49,7 +52,7 @@ public class BalancoServices {
                 writer.write(balanco.getTipo() + "," + balanco.getProdutos().getName() + "," + balanco.getQuant() + "," + dateFormat.format(balanco.getDate()));
                 writer.newLine();
             }
-            System.out.print("Transações salvas com sucesso no arquivo: " + filePath + "\n");
+            System.out.print("Transações salvas com sucesso!!! \n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -78,7 +81,7 @@ public class BalancoServices {
                     }
                 }
             }
-            System.out.println("Transações recuperadas com sucesso do arquivo: " + filePath + "\n");
+            System.out.println("Transações recuperadas com sucesso!!!\n");
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -91,12 +94,15 @@ public class BalancoServices {
                 TipoConta.add(ContasTipo);
             }
         }
-        JOptionPane.showMessageDialog(null, TipoConta);
+        JTextArea textArea = new JTextArea(15, 30);
+        textArea.setText(String.valueOf(TipoConta));
+        JScrollPane scrollPane = new JScrollPane(textArea);
+        JOptionPane.showMessageDialog(null, scrollPane, "TRANSAÇÔES ENCONTRADAS", JOptionPane.PLAIN_MESSAGE);
     }
 
 
     @Override
     public String toString() {
-        return "" + transacao;
+        return "\n" + transacao;
     }
 }

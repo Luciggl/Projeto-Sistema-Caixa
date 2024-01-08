@@ -43,6 +43,6 @@ public class BalancoCaixa implements Serializable {
         return
                 produtos.getName() + " " + quant +
                         "\ntipo: " + tipo + "\n" +
-                        dateFormat.format(date);
+                        dateFormat.format(date) + "\n";
     }
 }

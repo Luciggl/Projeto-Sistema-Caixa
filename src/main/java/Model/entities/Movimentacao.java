@@ -78,6 +78,9 @@ public class Movimentacao {
     public void setFechamentoCaixa(Date fechamentoCaixa) {
         this.fechamentoCaixa = fechamentoCaixa;
     }
+    public void setAberturaCaixa(Date aberturaCaixa) {
+        this.aberturaCaixa = aberturaCaixa;
+    }
 
     private SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
 

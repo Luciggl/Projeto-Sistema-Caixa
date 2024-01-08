@@ -114,7 +114,7 @@ public class Caixa {
                     .append("\n");
         }
 
-        result.append("\nTotal: R$ ").append(valorTotalCompra);
+        result.append("\nTotal: R$ ").append(calcularValorTotalCompra());
 
         return result.toString();
     }

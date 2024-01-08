@@ -192,13 +192,4 @@ public class Estoque implements Model.repositories.Estoque {
         balancoServices.PesquisarTipo(tipo);
     }
 
-    public BigDecimal calcularValorTotalEstoque() {
-        BigDecimal valorTotal = BigDecimal.ZERO;
-
-        for (Products product : productsEstoque) {
-            valorTotal.add(product.getValue().multiply(BigDecimal.valueOf(product.getQuanti())));
-        }
-        return valorTotal;
-    }
-
 }

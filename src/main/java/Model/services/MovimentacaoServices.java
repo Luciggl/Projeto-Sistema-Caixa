@@ -68,7 +68,7 @@ public class MovimentacaoServices {
                     }
                 }
             }
-            System.out.println("Movimentações carregadas com sucesso do arquivo: " + filepath);
+            System.out.println("Movimentações carregadas com sucesso!!!");
         } catch (FileNotFoundException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {

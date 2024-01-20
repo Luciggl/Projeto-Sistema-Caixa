@@ -14,8 +14,6 @@ import java.util.Locale;
 public class MovimentacaoServices {
     private ArrayList<Movimentacao> movimentacaos = new ArrayList<>();
 
-    SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");
-
     public ArrayList<Movimentacao> getMovimentacaos() {
         return movimentacaos;
     }
@@ -73,11 +71,6 @@ public class MovimentacaoServices {
             throw new RuntimeException(e);
         }
     }
-
-    public void exibirMovimentacoes() {
-        JOptionPane.showMessageDialog(null, movimentacaos.toString());
-    }
-
     @Override
     public String toString() {
         return

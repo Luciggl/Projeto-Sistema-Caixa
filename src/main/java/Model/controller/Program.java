@@ -18,8 +18,9 @@ import java.util.ArrayList;
 import java.util.Date;
 
 /*
-    Falta fazer:
-    #fazer a interface grafica
+    TODO:
+        Falta fazer:
+        #fazer a interface grafica;
 */
 
 
@@ -53,58 +54,6 @@ public class Program {
 
     }
 
-    private static void criarPrimeiroUsuario(LoginServices loginServices) throws UserExceptions {
-        JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
-        JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
-        String nome = JOptionPane.showInputDialog("nome do funcionario");
-        try {
-            if (verificarSeNaoEstaVazioNull(nome)) {
-                String login = JOptionPane.showInputDialog("login do funcionario");
-                if (verificarSeNaoEstaVazioNull(login)) {
-                    String senha = JOptionPane.showInputDialog("senha do funcionario");
-                    if (verificarSeNaoEstaVazioNull(senha)) {
-                        loginServices.adicionarUsuario(new User(nome, login, senha, FunctionUser.GERENTE));
-                        JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
-                    } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
-                } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
-            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
-        } catch (HeadlessException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void removerUsuario(LoginServices loginServices) throws UserExceptions {
-        String login = JOptionPane.showInputDialog("Digite o login do funcionario que deseja remover");
-        User user = loginServices.findByLogin(login);
-        try {
-            if (loginServices.usuarioExiste(user)) {
-                loginServices.removerUsuario(user);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private static void criarUsuario(LoginServices loginServices) throws UserExceptions {
-        String nome = JOptionPane.showInputDialog("nome do funcionario");
-        try {
-            if (verificarSeNaoEstaVazioNull(nome)) {
-                String login = JOptionPane.showInputDialog("login do funcionario");
-                if (loginServices.loginNaoExiste(login)) {
-                    if (verificarSeNaoEstaVazioNull(login)) {
-                        String senha = JOptionPane.showInputDialog("senha do funcionario");
-                        if (verificarSeNaoEstaVazioNull(senha)) {
-                            FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
-                            loginServices.adicionarUsuario(new User(nome, login, senha, function));
-                            JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
-                        } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
-                    } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
-                } else JOptionPane.showMessageDialog(null, "Ja existe um funcionario com esse login!!");
-            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
-        } catch (RuntimeException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     private static void menuGerente(Estoque estoque, LoginServices loginServices, MovimentacaoServices
             movimentacaoServices) {
@@ -174,7 +123,6 @@ public class Program {
             JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
         }
     }
-
 
     private static void menuCaixa(Caixa caixa, PaymentsServices services, Movimentacao
             movimentacao, MovimentacaoServices movimentacaoServices, String nomeFuncionario) {
@@ -270,6 +218,59 @@ public class Program {
         }
 
 
+    }
+
+    private static void criarPrimeiroUsuario(LoginServices loginServices) throws UserExceptions {
+        JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
+        JOptionPane.showMessageDialog(null, "Para iniciar precisamos criar o nosso primeiro usuario \nQue sera responsavel por gerenciar tudo \nÉ importante lembrar login e senha!!");
+        String nome = JOptionPane.showInputDialog("nome do funcionario");
+        try {
+            if (verificarSeNaoEstaVazioNull(nome)) {
+                String login = JOptionPane.showInputDialog("login do funcionario");
+                if (verificarSeNaoEstaVazioNull(login)) {
+                    String senha = JOptionPane.showInputDialog("senha do funcionario");
+                    if (verificarSeNaoEstaVazioNull(senha)) {
+                        loginServices.adicionarUsuario(new User(nome, login, senha, FunctionUser.GERENTE));
+                        JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+                    } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
+            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
+        } catch (HeadlessException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void removerUsuario(LoginServices loginServices) throws UserExceptions {
+        String login = JOptionPane.showInputDialog("Digite o login do funcionario que deseja remover");
+        User user = loginServices.findByLogin(login);
+        try {
+            if (loginServices.usuarioExiste(user)) {
+                loginServices.removerUsuario(user);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private static void criarUsuario(LoginServices loginServices) throws UserExceptions {
+        String nome = JOptionPane.showInputDialog("nome do funcionario");
+        try {
+            if (verificarSeNaoEstaVazioNull(nome)) {
+                String login = JOptionPane.showInputDialog("login do funcionario");
+                if (loginServices.loginNaoExiste(login)) {
+                    if (verificarSeNaoEstaVazioNull(login)) {
+                        String senha = JOptionPane.showInputDialog("senha do funcionario");
+                        if (verificarSeNaoEstaVazioNull(senha)) {
+                            FunctionUser function = (FunctionUser) JOptionPane.showInputDialog(null, "Selecione a Funcão do funcionario", "Função", JOptionPane.QUESTION_MESSAGE, null, FunctionUser.values(), FunctionUser.CAIXA);
+                            loginServices.adicionarUsuario(new User(nome, login, senha, function));
+                            JOptionPane.showMessageDialog(null, "Funcionario cadastrado com sucesso!!");
+                        } else JOptionPane.showMessageDialog(null, "A senha não podem ser vazios");
+                    } else JOptionPane.showMessageDialog(null, "O login não podem ser vazios");
+                } else JOptionPane.showMessageDialog(null, "Ja existe um funcionario com esse login!!");
+            } else JOptionPane.showMessageDialog(null, "O Nome não podem ser vazios");
+        } catch (RuntimeException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static void adicionarProduto(Estoque estoque) {
@@ -432,6 +433,7 @@ public class Program {
         }
     }
 
+
     private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao, String nomeFuncionario) {
         ArrayList<String> listaCompra = new ArrayList<>();
         int option;
@@ -561,14 +563,17 @@ public class Program {
                         default:
                             JOptionPane.showMessageDialog(null, "Opção inválida. Saindo do programa.");
                             System.exit(0);
+                            movimentacaoServices.SalvarMovimentacao(Path.pathMovimentacao);
                     }
                 } else {
                     JOptionPane.showMessageDialog(null, "SENHA não pode estar vazia ou Nula!!\nSaindo do programa.");
                     System.exit(0);
+                    movimentacaoServices.SalvarMovimentacao(Path.pathMovimentacao);
                 }
             } else {
                 JOptionPane.showMessageDialog(null, "LOGIN não pode estar vazio ou Nulo!!\nSaindo do programa.");
                 System.exit(0);
+                movimentacaoServices.SalvarMovimentacao(Path.pathMovimentacao);
             }
         } while (true);
     }

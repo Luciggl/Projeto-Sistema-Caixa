@@ -7,7 +7,7 @@ import Model.exceptions.ProdutoException;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public interface Estoque {
+public interface EstoqueRepository {
     ArrayList<Products> getEstoque();
 
 
@@ -37,9 +37,7 @@ public interface Estoque {
 
     void carregarEstoque(String filePath);
 
-
     void salvarTransacao(String path);
-
 
     void carregarTransacao(String path);
 

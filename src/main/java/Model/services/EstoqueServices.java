@@ -8,7 +8,7 @@ import java.io.*;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 
-public class Estoque implements Model.repositories.Estoque {
+public class EstoqueServices implements Model.repositories.EstoqueRepository {
     private ArrayList<Products> productsEstoque = new ArrayList<>();
 
     BalancoServices balancoServices = new BalancoServices();
@@ -17,7 +17,7 @@ public class Estoque implements Model.repositories.Estoque {
         return productsEstoque;
     }
 
-    public Estoque() {
+    public EstoqueServices() {
     }
 
     public boolean produtoExiste(Products product) {

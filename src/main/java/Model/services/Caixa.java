@@ -2,26 +2,27 @@ package Model.services;
 
 import Model.entities.Products;
 import Model.exceptions.ProdutoException;
-import Model.repositories.Path;
+import Model.repositories.CaixaRepository;
+import Model.utils.Path;
 
 import javax.swing.*;
 import java.math.BigDecimal;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Caixa {
-    private final Estoque estoque;
+public class Caixa implements CaixaRepository {
+    private final EstoqueRepository estoque;
     private final Map<Products, Integer> produtosCompra;
     private BigDecimal valorTotalCompra = BigDecimal.ZERO;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";
 
-    public Caixa(Estoque estoque) {
+    public Caixa(EstoqueRepository estoque) {
         this.estoque = estoque;
         this.produtosCompra = new HashMap<>();
     }
 
-    public Estoque getEstoque() {
+    public EstoqueRepository getEstoque() {
         return estoque;
     }
 
@@ -55,7 +56,7 @@ public class Caixa {
         }
     }
 
-    private boolean produtoExisteNoEstoque(Products produto, int quantidade) throws ProdutoException {
+    public boolean produtoExisteNoEstoque(Products produto, int quantidade) throws ProdutoException {
         if (estoque.produtoExiste(produto) && estoque.getProductById(produto.getId()) != null) {
             if (estoque.getProductById(produto.getId()).getQuanti() >= quantidade) {
                 return true;

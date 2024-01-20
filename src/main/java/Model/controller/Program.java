@@ -53,10 +53,7 @@ public class Program {
         }
 
     }
-
-
-    private static void menuGerente(EstoqueServices estoque, LoginServices loginServices, MovimentacaoServices
-            movimentacaoServices) {
+    private static void menuGerente(EstoqueServices estoque, LoginServices loginServices, MovimentacaoServices movimentacaoServices) {
         try {
             int option;
             do {

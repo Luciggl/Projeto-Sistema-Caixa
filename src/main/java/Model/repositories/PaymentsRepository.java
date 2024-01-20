@@ -10,5 +10,5 @@ public interface PaymentsRepository {
     BigDecimal CalcularTaxPix(BigDecimal valor);
     BigDecimal CalcularTaxCredito(BigDecimal valor);
     BigDecimal CalcularTroco(BigDecimal valorTotal, BigDecimal valorRecebido);
-    String buildPagamento(String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor);
+    String buildPayments(String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor);
 }

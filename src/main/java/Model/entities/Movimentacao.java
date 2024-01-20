@@ -78,13 +78,14 @@ public class Movimentacao {
     public void setFechamentoCaixa(Date fechamentoCaixa) {
         this.fechamentoCaixa = fechamentoCaixa;
     }
+
     public void setAberturaCaixa(Date aberturaCaixa) {
         this.aberturaCaixa = aberturaCaixa;
     }
 
     private SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
 
-    public void BalancoCaixaDiario(Date fechamentoCaixa){
+    public void BalancoCaixaDiario(Date fechamentoCaixa) {
         setFechamentoCaixa(fechamentoCaixa);
         JOptionPane.showMessageDialog(null,
                 "Abertura do Caixa: " + formato.format(aberturaCaixa) +
@@ -96,7 +97,7 @@ public class Movimentacao {
     }
 
 
-    public boolean VerificarSeOuveMovimentacao(){
+    public boolean VerificarSeOuveMovimentacao() {
         return !Objects.equals(getValorDiarioPix(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioCredito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDebito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDinheiro(), getValorDiarioDinheiro());
     }
 

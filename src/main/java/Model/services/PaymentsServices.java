@@ -13,19 +13,19 @@ public class PaymentsServices implements PaymentsRepository {
     String formaPagamento;
 
     public String pagamentoPix(BigDecimal valor, String nome) {
-        return buildPagamento(nome, 1, valor.subtract(CalcularTaxPix(valor)), valor);
+        return buildPayments(nome, 1, valor.subtract(CalcularTaxPix(valor)), valor);
     }
 
     public String pagamentoCredito(BigDecimal valor, String nome) {
-        return buildPagamento(nome, 2, valor.add(CalcularTaxCredito(valor)),valor);
+        return buildPayments(nome, 2, valor.add(CalcularTaxCredito(valor)), valor);
     }
 
     public String pagamentoDebito(BigDecimal valor, String nome) {
-        return buildPagamento(nome,3,valor,valor);
+        return buildPayments(nome, 3, valor, valor);
     }
 
     public String pagamentoDinheiro(BigDecimal valor, BigDecimal valorRecebido, String nome) {
-        return  buildPagamento(nome,4,valorRecebido,valor);
+        return buildPayments(nome, 4, valorRecebido, valor);
     }
 
     private String formatarValor(BigDecimal valor) {
@@ -50,7 +50,7 @@ public class PaymentsServices implements PaymentsRepository {
     }
 
     // O ValidarCartão ira ver se o cartão é valido pra poder liberar a compra;
-    public static class ValidarCartao{
+    public static class ValidarCartao {
         public static boolean validarNumeroCartao(String numeroCartao) {
 
             String numeroLimpo = numeroCartao.replaceAll("\\D", "");
@@ -84,7 +84,7 @@ public class PaymentsServices implements PaymentsRepository {
     O buildPagamento vai receber o String com a data da compra, o nome do caixa, a forma de pagamento e retorna A forma de pagamento com os calculos necessarios
     forma de pagamento em int (1 - Pix | 2 - credito | 3 - debito | 4 - dinheiro);
     */
-    public String buildPagamento(String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor) {
+    public String buildPayments(String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor) {
 
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
 

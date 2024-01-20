@@ -24,8 +24,8 @@ public class Products implements Serializable {
         this.quanti = quanti;
     }
 
-    public Products(String name){
-        this.name= name;
+    public Products(String name) {
+        this.name = name;
     }
 
     public int getId() {

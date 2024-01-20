@@ -72,6 +72,7 @@ public class MovimentacaoServices implements MovimentacaoRepository {
             throw new RuntimeException(e);
         }
     }
+
     @Override
     public String toString() {
         return

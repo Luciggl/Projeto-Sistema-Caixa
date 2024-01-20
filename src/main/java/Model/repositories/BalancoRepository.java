@@ -9,7 +9,6 @@ public interface BalancoRepository {
 
     ArrayList<BalancoCaixa> getBalanco();
 
-
     void registrarEntrada(Products products, int Quant);
 
     void registrarSaida(Products products, int Quant);

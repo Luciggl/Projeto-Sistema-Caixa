@@ -60,10 +60,10 @@ public class EstoqueServices implements Model.repositories.EstoqueRepository {
         }
     }
 
-    public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoException{
+    public void MudarValorProduto(int id, BigDecimal novoValor) throws ProdutoException {
         Products products1 = getProductById(id);
-        if (produtoExiste(products1)){
-                products1.setValue(novoValor);
+        if (produtoExiste(products1)) {
+            products1.setValue(novoValor);
         } else {
             throw new ProdutoException("Error: Produto não existe no estoque");
         }
@@ -173,12 +173,12 @@ public class EstoqueServices implements Model.repositories.EstoqueRepository {
         }
     }
 
-    public void salvarTransacao(String path){
+    public void salvarTransacao(String path) {
         balancoServices.salvarTransacoes(path);
     }
 
 
-    public void carregarTransacao(String path){
+    public void carregarTransacao(String path) {
         balancoServices.recuperarTransacoes(path);
     }
 
@@ -186,7 +186,7 @@ public class EstoqueServices implements Model.repositories.EstoqueRepository {
         balancoServices.exibirTransacoes();
     }
 
-    public void PesquisarTransacaoTipo(String tipo){
+    public void PesquisarTransacaoTipo(String tipo) {
         balancoServices.PesquisarTipo(tipo);
     }
 

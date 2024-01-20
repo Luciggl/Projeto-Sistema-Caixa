@@ -20,7 +20,7 @@ public class User {
     public String getNome() {
         return nome;
     }
-    
+
     public String getLogin() {
         return login;
     }
@@ -32,7 +32,7 @@ public class User {
     public FunctionUser getFunction() {
         return function;
     }
-    
+
 
     @Override
     public boolean equals(Object o) {

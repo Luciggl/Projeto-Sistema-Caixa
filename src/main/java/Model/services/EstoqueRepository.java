@@ -95,7 +95,7 @@ public class Estoque implements Model.repositories.Estoque {
         }
     }
 
-    public Products getProductById(double id) {
+    public Products getProductById(int id) {
         for (Products product : productsEstoque) {
             if (product.getId() == id) {
                 return product;

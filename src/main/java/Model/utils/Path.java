@@ -1,4 +1,4 @@
-package Model.repositories;
+package Model.utils;
 
 public interface Path {
     String pathEstoque = "src/main/java/Model/BDEstoque/bdEstoque.txt";

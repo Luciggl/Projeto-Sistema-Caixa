@@ -3,12 +3,13 @@ package Model.services;
 import Model.entities.User;
 import Model.enums.FunctionUser;
 import Model.exceptions.UserExceptions;
-import Model.repositories.Path;
+import Model.repositories.LoginRepository;
+import Model.utils.Path;
 
 import java.io.*;
 import java.util.ArrayList;
 
-public class LoginServices {
+public class LoginServices implements LoginRepository {
 
     private ArrayList<User> users = new ArrayList<>();
 
@@ -25,11 +26,11 @@ public class LoginServices {
 
     }
 
-    public void removerUsuario(User user) {
+    public void removerUsuario(User user) throws UserExceptions {
         if (usuarioExiste(user)) {
             users.remove(user);
             SalvarUsuarios(Path.pathUsers);
-        }
+        } else throw new UserExceptions("Usuario não encontrado");
     }
 
     public User findByLogin(String login) throws  UserExceptions{

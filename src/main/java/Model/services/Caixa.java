@@ -11,18 +11,18 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Caixa implements CaixaRepository {
-    private final EstoqueRepository estoque;
+    private final EstoqueServices estoque;
     private final Map<Products, Integer> produtosCompra;
     private BigDecimal valorTotalCompra = BigDecimal.ZERO;
 
     private static final String PRODUTO_ADICIONADO_MSG = "Produto adicionado à lista de compra: %s | Quantidade: %d";
 
-    public Caixa(EstoqueRepository estoque) {
+    public Caixa(EstoqueServices estoque) {
         this.estoque = estoque;
         this.produtosCompra = new HashMap<>();
     }
 
-    public EstoqueRepository getEstoque() {
+    public EstoqueServices getEstoque() {
         return estoque;
     }
 

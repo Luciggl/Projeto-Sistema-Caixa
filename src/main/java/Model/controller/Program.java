@@ -7,8 +7,8 @@ import Model.enums.Category;
 import Model.enums.FunctionUser;
 import Model.exceptions.ProdutoException;
 import Model.exceptions.UserExceptions;
-import Model.repositories.Path;
-import Model.repositories.TaxPayments;
+import Model.utils.Path;
+import Model.utils.TaxPayments;
 import Model.services.*;
 
 import javax.swing.*;
@@ -29,7 +29,7 @@ public class Program {
     public static void main(String[] args) throws UserExceptions {
 
         PaymentsServices paymentsServices = new PaymentsServices();
-        Estoque estoque = new Estoque();
+        EstoqueServices estoque = new EstoqueServices();
         Caixa caixa = new Caixa(estoque);
         LoginServices loginServices = new LoginServices();
         Movimentacao movimentacao = new Movimentacao();
@@ -55,7 +55,7 @@ public class Program {
     }
 
 
-    private static void menuGerente(Estoque estoque, LoginServices loginServices, MovimentacaoServices
+    private static void menuGerente(EstoqueServices estoque, LoginServices loginServices, MovimentacaoServices
             movimentacaoServices) {
         try {
             int option;
@@ -161,7 +161,7 @@ public class Program {
         }
     }
 
-    private static void menuEstoquista(Estoque estoque) {
+    private static void menuEstoquista(EstoqueServices estoque) {
         try {
             int option;
             do {
@@ -273,7 +273,7 @@ public class Program {
         }
     }
 
-    private static void adicionarProduto(Estoque estoque) {
+    private static void adicionarProduto(EstoqueServices estoque) {
         try {
             int id = Integer.parseInt(JOptionPane.showInputDialog("ID do produto:"));
             if (!estoque.Idexiste(id)) {
@@ -297,7 +297,7 @@ public class Program {
         }
     }
 
-    private static void removerProduto(Estoque estoque) {
+    private static void removerProduto(EstoqueServices estoque) {
         try {
             int idToRemove = Integer.parseInt(JOptionPane.showInputDialog("ID do produto a ser removido:"));
             Products productToRemove = estoque.getProductById(idToRemove);
@@ -315,7 +315,7 @@ public class Program {
         }
     }
 
-    private static void adicionarQuantidade(Estoque estoque) {
+    private static void adicionarQuantidade(EstoqueServices estoque) {
         try {
             int idToAddQuant = Integer.parseInt(JOptionPane.showInputDialog("ID do produto para adicionar quantidade:"));
             int addQuantity = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser adicionada:"));
@@ -328,7 +328,7 @@ public class Program {
         }
     }
 
-    private static void removerQuantidade(Estoque estoque) {
+    private static void removerQuantidade(EstoqueServices estoque) {
         try {
             int idToRemoveQuant = Integer.parseInt(JOptionPane.showInputDialog("ID do produto para remover quantidade:"));
             int removeQuantity = Integer.parseInt(JOptionPane.showInputDialog("Quantidade a ser removida:"));
@@ -341,7 +341,7 @@ public class Program {
         }
     }
 
-    private static Products escolherProduto(Estoque estoque) {
+    private static Products escolherProduto(EstoqueServices estoque) {
         try {
             int productId = Integer.parseInt(JOptionPane.showInputDialog("ID do produto a ser escolhido:"));
             if (estoque.Idexiste(productId)) {
@@ -356,7 +356,7 @@ public class Program {
         }
     }
 
-    private static void pesquisarPorIdOuCategoriaOuFabricante(Estoque estoque) {
+    private static void pesquisarPorIdOuCategoriaOuFabricante(EstoqueServices estoque) {
         try {
             String input = JOptionPane.showInputDialog("Escolha uma opção:\n1 - Pesquisar por ID\n2 - Pesquisar por Categoria\n3 - Pesquisar por Fabricante");
             int option = Integer.parseInt(input);
@@ -382,7 +382,7 @@ public class Program {
         }
     }
 
-    private static void pesquisarPorId(Estoque estoque) {
+    private static void pesquisarPorId(EstoqueServices estoque) {
         try {
             Products produtoPesquisado = escolherProduto(estoque);
             if (produtoPesquisado != null) {
@@ -395,7 +395,7 @@ public class Program {
         }
     }
 
-    private static void pesquisarPorCategoria(Estoque estoque) {
+    private static void pesquisarPorCategoria(EstoqueServices estoque) {
         try {
             Category category = (Category) JOptionPane.showInputDialog(null, "Selecione a Categoria:", "Categoria", JOptionPane.QUESTION_MESSAGE, null, Category.values(), Category.ALIMENTO);
             ArrayList<Products> produtosPorCategoria = estoque.getProductsByCategory(category);
@@ -414,7 +414,7 @@ public class Program {
         }
     }
 
-    private static void pesquisarPorFabricante(Estoque estoque) {
+    private static void pesquisarPorFabricante(EstoqueServices estoque) {
         try {
             String manufacturer = JOptionPane.showInputDialog("Digite o nome do fabricante:");
             ArrayList<Products> produtosPorFabricante = estoque.getProductByManufacturer(manufacturer);
@@ -537,7 +537,7 @@ public class Program {
         }
     }
 
-    private static void mostrarTelaLogin(LoginServices loginServices, Estoque estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
+    private static void mostrarTelaLogin(LoginServices loginServices, EstoqueServices estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
         String login, senha;
         do {
             login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");

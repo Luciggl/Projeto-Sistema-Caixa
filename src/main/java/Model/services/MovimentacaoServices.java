@@ -1,6 +1,7 @@
 package Model.services;
 
 import Model.entities.Movimentacao;
+import Model.repositories.MovimentacaoRepository;
 
 import javax.swing.*;
 import java.io.*;
@@ -11,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Locale;
 
-public class MovimentacaoServices {
+public class MovimentacaoServices implements MovimentacaoRepository {
     private ArrayList<Movimentacao> movimentacaos = new ArrayList<>();
 
     public ArrayList<Movimentacao> getMovimentacaos() {

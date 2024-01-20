@@ -1,6 +1,7 @@
 package Model.services;
 
-import Model.repositories.TaxPayments;
+import Model.repositories.PaymentsRepository;
+import Model.utils.TaxPayments;
 
 import javax.swing.*;
 import java.math.BigDecimal;
@@ -8,7 +9,7 @@ import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-public class PaymentsServices {
+public class PaymentsServices implements PaymentsRepository {
     Date dateFinal;
     String formaPagamento;
     SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");

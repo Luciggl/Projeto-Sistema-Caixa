@@ -2,13 +2,13 @@ package Model.repositories;
 
 import Model.entities.Products;
 import Model.exceptions.ProdutoException;
-import Model.services.EstoqueRepository;
+import Model.services.EstoqueServices;
 
 import java.math.BigDecimal;
 import java.util.Map;
 
 public interface CaixaRepository {
-    EstoqueRepository getEstoque();
+    EstoqueServices getEstoque();
     Map<Products, Integer> getProdutosCompra();
     void adicionarProduto(Products produto, int quantidade) throws ProdutoException;
     void removerProduto(Products produto, int quantidade) throws ProdutoException;

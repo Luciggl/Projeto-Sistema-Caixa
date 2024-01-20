@@ -2,6 +2,7 @@ package Model.services;
 
 import Model.entities.BalancoCaixa;
 import Model.entities.Products;
+import Model.repositories.BalancoRepository;
 
 import javax.swing.*;
 import java.io.*;
@@ -10,7 +11,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class BalancoServices {
+public class BalancoServices implements BalancoRepository {
     private final ArrayList<BalancoCaixa> transacao;
 
     SimpleDateFormat dateFormat = new SimpleDateFormat("EEE MMM dd HH:mm:ss zzz yyyy");

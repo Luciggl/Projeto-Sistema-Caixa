@@ -10,34 +10,22 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class PaymentsServices implements PaymentsRepository {
-    Date dateFinal;
     String formaPagamento;
-    SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
 
     public String pagamentoPix(BigDecimal valor, String nome) {
-        dateFinal = new Date();
-        String DataFimCompra = formato.format(dateFinal);
-        JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        return buildPagamento(DataFimCompra, nome, 1, valor.subtract(CalcularTaxPix(valor)), valor);
+        return buildPagamento(nome, 1, valor.subtract(CalcularTaxPix(valor)), valor);
     }
 
     public String pagamentoCredito(BigDecimal valor, String nome) {
-        dateFinal = new Date();
-        String DataFimCompra = formato.format(dateFinal);
-        JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        return buildPagamento(DataFimCompra, nome, 2, valor.add(CalcularTaxCredito(valor)),valor);
+        return buildPagamento(nome, 2, valor.add(CalcularTaxCredito(valor)),valor);
     }
 
     public String pagamentoDebito(BigDecimal valor, String nome) {
-        dateFinal = new Date();
-        String DataFimCompra = formato.format(dateFinal);
-        return buildPagamento(DataFimCompra,nome,3,valor,valor);
+        return buildPagamento(nome,3,valor,valor);
     }
 
     public String pagamentoDinheiro(BigDecimal valor, BigDecimal valorRecebido, String nome) {
-        dateFinal = new Date();
-        String DataFimCompra = formato.format(dateFinal);
-        return  buildPagamento(DataFimCompra, nome,4,valorRecebido,valor);
+        return  buildPagamento(nome,4,valorRecebido,valor);
     }
 
     private String formatarValor(BigDecimal valor) {
@@ -96,10 +84,19 @@ public class PaymentsServices implements PaymentsRepository {
     O buildPagamento vai receber o String com a data da compra, o nome do caixa, a forma de pagamento e retorna A forma de pagamento com os calculos necessarios
     forma de pagamento em int (1 - Pix | 2 - credito | 3 - debito | 4 - dinheiro);
     */
-    public String buildPagamento(String DataFimCompra, String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor) {
-        BigDecimal valorFinal = BigDecimal.ZERO;
-        BigDecimal desconto = BigDecimal.ZERO;
-        BigDecimal taxaCartao = BigDecimal.ZERO;
+    public String buildPagamento(String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor) {
+
+        JOptionPane.showMessageDialog(null, "Transação Aprovada!");
+
+        SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
+        Date dateFinal = new Date();
+        String DataFimCompra = formato.format(dateFinal);
+
+        BigDecimal valorFinal, desconto, taxaCartao;
+        valorFinal = BigDecimal.ZERO;
+        desconto = BigDecimal.ZERO;
+        taxaCartao = BigDecimal.ZERO;
+
         String formaPag = switch (forma) {
             case 1 -> {
                 desconto = CalcularTaxPix(valor);

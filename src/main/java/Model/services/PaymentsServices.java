@@ -17,36 +17,26 @@ public class PaymentsServices {
         dateFinal = new Date();
         String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: PIX\nValor Total R$:" + formatarValor(valor) + "\nDesconto R$: " + formatarValor(CalcularTaxPix(valor)) + "\nTaxa Cartão:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor.subtract(CalcularTaxPix(valor))) + "\nTroco R$:" + BigDecimal.ZERO;
-        return formaPagamento;
+        return buildPagamento(DataFimCompra, nome, 1, valor.subtract(CalcularTaxPix(valor)), valor);
     }
 
     public String pagamentoCredito(BigDecimal valor, String nome) {
         dateFinal = new Date();
         String DataFimCompra = formato.format(dateFinal);
         JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        BigDecimal desconto = BigDecimal.ZERO;
-        BigDecimal taxaCartao = CalcularTaxCredito(valor);
-        BigDecimal valorFinal = valor.add(taxaCartao);
-
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: CREDITO\nValor Total R$:" + formatarValor(valor) + "\nDesconto R$: " + formatarValor(desconto) + "\nTaxa Cartão:" + formatarValor(taxaCartao) + "\nValor final R$:" + formatarValor(valorFinal) + "\nTroco R$:" + BigDecimal.ZERO;
-        return formaPagamento;
+        return buildPagamento(DataFimCompra, nome, 2, valor.add(CalcularTaxCredito(valor)),valor);
     }
 
     public String pagamentoDebito(BigDecimal valor, String nome) {
         dateFinal = new Date();
         String DataFimCompra = formato.format(dateFinal);
-        JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: DEBITO\nValor Total R$:" + formatarValor(valor) + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + BigDecimal.ZERO;
-        return formaPagamento;
+        return buildPagamento(DataFimCompra,nome,3,valor,valor);
     }
 
     public String pagamentoDinheiro(BigDecimal valor, BigDecimal valorRecebido, String nome) {
         dateFinal = new Date();
         String DataFimCompra = formato.format(dateFinal);
-        JOptionPane.showMessageDialog(null, "Transação Aprovada!");
-        formaPagamento = "-------------------------------------------" + "\n" + DataFimCompra + "\nCaixa: " + nome + "\n-------------------------------------------\nForma de pagamento: DINHEIRO\nValor recebido R$:" + formatarValor(valorRecebido) + "\nDesconto R$: " + BigDecimal.ZERO + "\nTaxa Cartão R$:" + BigDecimal.ZERO + "\nValor final R$:" + formatarValor(valor) + "\nTroco R$:" + formatarValor(CalcularTroco(valor, valorRecebido));
-        return formaPagamento;
+        return  buildPagamento(DataFimCompra, nome,4,valorRecebido,valor);
     }
 
     private String formatarValor(BigDecimal valor) {
@@ -70,7 +60,8 @@ public class PaymentsServices {
         }
     }
 
-    public static class ValidadorCartaoCredito {
+    // O ValidarCartão ira ver se o cartão é valido pra poder liberar a compra;
+    public static class ValidarCartao{
         public static boolean validarNumeroCartao(String numeroCartao) {
 
             String numeroLimpo = numeroCartao.replaceAll("\\D", "");
@@ -84,7 +75,6 @@ public class PaymentsServices {
 
             for (int i = numeroLimpo.length() - 1; i >= 0; i--) {
                 int digito = Character.getNumericValue(numeroLimpo.charAt(i));
-
                 if (alternar) {
                     digito *= 2;
                     if (digito > 9) {
@@ -98,5 +88,39 @@ public class PaymentsServices {
 
             return (soma % 10 == 0);
         }
+    }
+
+
+    /*
+    O buildPagamento vai receber o String com a data da compra, o nome do caixa, a forma de pagamento e retorna A forma de pagamento com os calculos necessarios
+    forma de pagamento em int (1 - Pix | 2 - credito | 3 - debito | 4 - dinheiro);
+    */
+    public String buildPagamento(String DataFimCompra, String nomeFuncionario, int forma, BigDecimal valorRecebido, BigDecimal valor) {
+        BigDecimal valorFinal = BigDecimal.ZERO;
+        BigDecimal desconto = BigDecimal.ZERO;
+        BigDecimal taxaCartao = BigDecimal.ZERO;
+        String formaPag = switch (forma) {
+            case 1 -> {
+                desconto = CalcularTaxPix(valor);
+                yield "Pix";
+            }
+            case 2 -> {
+                taxaCartao = CalcularTaxCredito(valor);
+                yield "Credito";
+            }
+            case 3 -> "Debito";
+            case 4 -> "Dinheiro";
+            default -> "";
+        };
+
+        formaPagamento = "-------------------------------------------" + "\n" +
+                DataFimCompra + "\nCaixa: " + nomeFuncionario + "\n-------------------------------------------\n" +
+                "Forma de pagamento:" + formaPag + "\n" +
+                "Valor recebido R$:" + formatarValor(valorRecebido) + "\n" +
+                "Desconto R$: " + formatarValor(desconto) + "\nTaxa Cartão R$:" + formatarValor(taxaCartao) +
+                "\nValor final R$:"
+                + formatarValor(valorFinal.add(valor.add(taxaCartao).subtract(desconto))) + "\nTroco R$:" + formatarValor(CalcularTroco(valor, valorRecebido));
+
+        return formaPagamento;
     }
 }

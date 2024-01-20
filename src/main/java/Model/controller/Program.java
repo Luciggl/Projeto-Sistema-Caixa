@@ -497,7 +497,7 @@ public class Program {
                 break;
             case 2:
                 String Card = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(Card)) {
+                if (PaymentsServices.ValidarCartao.validarNumeroCartao(Card)) {
                     listaCompra.add(paymentsServices.pagamentoCredito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioCredito(valorTotalCompra.add(valorTotalCompra.multiply(TaxPayments.taxCredito)));
@@ -509,7 +509,7 @@ public class Program {
 
             case 3:
                 String CardDeb = JOptionPane.showInputDialog(null, "Digite o numero do cartão");
-                if (PaymentsServices.ValidadorCartaoCredito.validarNumeroCartao(CardDeb)) {
+                if (PaymentsServices.ValidarCartao.validarNumeroCartao(CardDeb)) {
                     listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra, nomeFuncionario));
                     caixa.finalizarCompra();
                     movimentacao.adicionarValorDiarioDebito(valorTotalCompra);

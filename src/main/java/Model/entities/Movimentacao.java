@@ -79,10 +79,6 @@ public class Movimentacao {
         this.fechamentoCaixa = fechamentoCaixa;
     }
 
-    public void setAberturaCaixa(Date aberturaCaixa) {
-        this.aberturaCaixa = aberturaCaixa;
-    }
-
     private SimpleDateFormat formato = new SimpleDateFormat("EEE dd/MM/yyyy HH:mm:ss");
 
     public void BalancoCaixaDiario(Date fechamentoCaixa) {
@@ -98,7 +94,7 @@ public class Movimentacao {
 
 
     public boolean VerificarSeOuveMovimentacao() {
-        return !Objects.equals(getValorDiarioPix(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioCredito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDebito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDinheiro(), getValorDiarioDinheiro());
+        return !Objects.equals(getValorDiarioPix(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioCredito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDebito(), BigDecimal.ZERO) || !Objects.equals(getValorDiarioDinheiro(), BigDecimal.ZERO);
     }
 
     @Override

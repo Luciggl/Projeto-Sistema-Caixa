@@ -18,17 +18,8 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 
-/*
-    TODO:
-        Falta fazer:
-        #fazer a interface grafica;
-*/
-
-
-public class Program {
-
-    public static void main(String[] args) throws UserExceptions {
-
+public class Iniciar {
+    public static void run() throws UserExceptions {
         PaymentsServices paymentsServices = new PaymentsServices();
         EstoqueServices estoque = new EstoqueServices();
         Caixa caixa = new Caixa(estoque);
@@ -44,15 +35,14 @@ public class Program {
         if (!loginServices.ListaDeUserEstaVazia()) {
             JOptionPane.showMessageDialog(null, "Bem Vindo ao Sistema PDV!!");
             try {
-                mostrarTelaLogin(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
+                Login(loginServices,estoque,paymentsServices,movimentacao,movimentacaoServices,caixa);
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
             }
         } else {
             criarPrimeiroUsuario(loginServices);
-            mostrarTelaLogin(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
+            Login(loginServices, estoque, paymentsServices, movimentacao, movimentacaoServices, caixa);
         }
-
     }
     private static void menuGerente(EstoqueServices estoque, LoginServices loginServices, MovimentacaoServices movimentacaoServices) {
         try {
@@ -431,7 +421,6 @@ public class Program {
         }
     }
 
-
     private static void realizarCompra(Caixa caixa, PaymentsServices paymentsServices, Movimentacao movimentacao, String nomeFuncionario) {
         ArrayList<String> listaCompra = new ArrayList<>();
         int option;
@@ -510,14 +499,14 @@ public class Program {
 
             case 3:
                 cardNumber = solicitarNumeroCartao();
-                    if (processarPagamentoCartao(cardNumber)){
-                        listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra, nomeFuncionario));
-                        caixa.finalizarCompra();
-                        movimentacao.adicionarValorDiarioDebito(valorTotalCompra);
-                        Text.Imprimir("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
-                    }
+                if (processarPagamentoCartao(cardNumber)){
+                    listaCompra.add(paymentsServices.pagamentoDebito(valorTotalCompra, nomeFuncionario));
+                    caixa.finalizarCompra();
+                    movimentacao.adicionarValorDiarioDebito(valorTotalCompra);
+                    Text.Imprimir("Produtos comprados:\n" + String.join("\n", listaCompra) + "\n", "NOTA FISCAL");
+                } else {
+                    JOptionPane.showMessageDialog(null, "Cartão Inválido\nCompra Não concluída");
+                }
                 break;
             case 4:
                 BigDecimal ValorRecebido = new BigDecimal(JOptionPane.showInputDialog(null,
@@ -535,7 +524,6 @@ public class Program {
                 JOptionPane.showMessageDialog(null, "Digite uma forma de pagamento válida");
         }
     }
-
     private static boolean processarPagamentoCartao(String Card){
         for(int i = 1; i <= 3; i++){
             if(PaymentsServices.ValidarCartao.validarNumeroCartao(Card)){
@@ -546,7 +534,7 @@ public class Program {
         return false;
     }
 
-    private static void mostrarTelaLogin(LoginServices loginServices, EstoqueServices estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
+    private static void Login(LoginServices loginServices, EstoqueServices estoque, PaymentsServices paymentsServices, Movimentacao movimentacao, MovimentacaoServices movimentacaoServices, Caixa caixa) throws UserExceptions {
         String login, senha;
         do {
             login = JOptionPane.showInputDialog("Bem vindo!! \nDigite Seu Login: ");
@@ -586,9 +574,6 @@ public class Program {
             }
         } while (true);
     }
-
-
-
 
     private static String solicitarNumeroCartao() {
         return JOptionPane.showInputDialog(null, "Digite o numero do cartão");

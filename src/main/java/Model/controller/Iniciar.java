@@ -529,6 +529,24 @@ public class Iniciar {
             if(PaymentsServices.ValidarCartao.validarNumeroCartao(Card)){
                 return true;
             } else
+
+                Card = JOptionPane.showInputDialog(null, "Digite um Cartão Válido!", "ERROR", JOptionPane.ERROR_MESSAGE);
+
+            // Verifica se o usuário clicou em "Cancelar" ou deixou em branco
+            if (Card == null || Card.trim().isEmpty()) {
+                JOptionPane.showMessageDialog(null, "Operação cancelada pelo usuário.", "Cancelado", JOptionPane.INFORMATION_MESSAGE);
+                break;
+            }
+        }
+        return false;
+    }
+
+
+    private static boolean testeCartao(String card){
+        for(int i = 1; i <= 3; i++){
+            if(PaymentsServices.ValidarCartao.validarNumeroCartao(card)){
+                return true;
+            } else
                 JOptionPane.showInputDialog(null, "Digite um Cartão Valido!!", "ERROR", JOptionPane.ERROR_MESSAGE);
         }
         return false;
